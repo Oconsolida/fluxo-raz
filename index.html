@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fluxo de aderência da Raz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: raias verticais (quem faz) e faixas horizontais (fases), o tempo corre de cima para baixo; detalhe e pontos de validação abaixo */
+:root {
+  --paper: #f5f6f8;
+  --surface: #ffffff;
+  --band: #eef1f5;
+  --head: #e4e8ef;
+  --ink: #1b2230;
+  --muted: #5a6372;
+  --line: #c6cdd7;
+  --accent: #4338ca;
+  --accent-soft: #e7e6fb;
+  --decide: #a85d12;
+  --decide-soft: #fbefe0;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12161d; --surface: #1a2029; --band: #161b23; --head: #222a35;
+    --ink: #e8ecf2; --muted: #a3acb9; --line: #3b4453;
+    --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12161d; --surface: #1a2029; --band: #161b23; --head: #222a35;
+  --ink: #e8ecf2; --muted: #a3acb9; --line: #3b4453;
+  --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: 48px;
+}
+header { display: grid; gap: 16px; max-width: 70ch; }
+.eyebrow {
+  font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 700; }
+h2 { font-size: 24px; font-weight: 600; }
+p { margin: 0; }
+.lead { font-size: 18px; color: var(--muted); }
+.rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.rule { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 4px; min-width: 0; }
+.rule b { font-size: 15px; }
+.rule span { color: var(--muted); font-size: 15px; }
+section { display: grid; gap: 20px; }
+.section-head { display: grid; gap: 6px; max-width: 70ch; }
+.section-head p { color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 18px; height: 14px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
+.sw.form { background: var(--accent-soft); border-color: var(--accent); }
+.sw.dec { background: var(--decide-soft); border-color: var(--decide); transform: rotate(45deg) scale(0.8); border-radius: 2px; }
+.diagram {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.diagram svg { display: block; width: 100%; min-width: 900px; height: auto; font-family: var(--font-body); }
+.scroll-hint { display: none; font-size: 14px; color: var(--muted); }
+@media (max-width: 720px) { .scroll-hint { display: block; } .rules { grid-template-columns: 1fr; } }
+
+/* SVG */
+.lane-head { fill: var(--head); }
+.lane-name { fill: var(--ink); font-size: 14px; font-weight: 700; }
+.band-a { fill: var(--band); }
+.band-b { fill: var(--surface); }
+.lane-line { stroke: var(--line); stroke-width: 1; stroke-dasharray: 4 5; }
+.lane-edge { stroke: var(--line); stroke-width: 1; }
+.phase-n { fill: var(--muted); font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; }
+.phase-name { fill: var(--ink); font-size: 13.5px; font-weight: 700; }
+.box { fill: var(--surface); stroke: var(--line); stroke-width: 1.25; }
+.box.form { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.dec { fill: var(--decide-soft); stroke: var(--decide); stroke-width: 1.5; }
+.t { fill: var(--ink); font-size: 13px; }
+.t .n { font-weight: 700; }
+.box.form + .t .n, .form-n { fill: var(--accent); }
+.tq { fill: var(--muted); font-size: 12px; font-style: italic; }
+.td { fill: var(--ink); font-size: 12.5px; font-weight: 600; }
+.arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+.loop { fill: none; stroke: var(--decide); stroke-width: 1.4; stroke-dasharray: 5 4; }
+.ah { fill: var(--muted); }
+.ah-loop { fill: var(--decide); }
+.lbl { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.lbl-loop { fill: var(--decide); font-size: 12px; font-weight: 600; }
+
+/* Detalhe */
+.phases { display: grid; gap: 16px; }
+.phase { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 14px; }
+.phase h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+.phase h3 small { font-family: var(--font-body); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.step { display: grid; grid-template-columns: 2.25rem 8.5rem minmax(0, 1fr); gap: 4px 12px; align-items: baseline; }
+.step .num { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted); }
+.step .who { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.step .what { min-width: 0; }
+.step.is-form .num { color: var(--accent); }
+.step .decision { grid-column: 3; color: var(--decide); font-size: 15px; }
+@media (max-width: 560px) {
+  .step { grid-template-columns: 2rem minmax(0, 1fr); }
+  .step .who { grid-column: 2; }
+  .step .what, .step .decision { grid-column: 2; }
+}
+
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.checks li { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 4px; }
+.checks li b { font-size: 16px; }
+.checks li span { color: var(--muted); font-size: 15px; }
+footer { color: var(--muted); font-size: 14px; }
+</style>
+
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Projeto Raz · Logística</div>
+    <h1>Fluxo do levantamento à operação</h1>
+    <p class="lead">Como a Raz e o Consolida levam cada cliente do primeiro levantamento até o operador logístico certo, com o custo simulado e o fluxo operacional definidos antes da assinatura.</p>
+  </header>
+
+  <section aria-labelledby="regras">
+    <div class="section-head">
+      <h2 id="regras">Como os dois formulários se cruzam</h2>
+      <p>O formulário do cliente diz o que a operação precisa. O do operador diz o que ele atende. Os dois usam os mesmos blocos e as mesmas opções, e cada resposta tem um de três papéis.</p>
+    </div>
+    <div class="rules">
+      <div class="rule"><b>Corta</b><span>Tira da lista o operador que não atende. Exemplo: produto alimentício e operador sem licença sanitária.</span></div>
+      <div class="rule"><b>Pontua</b><span>Soma na nota de aderência, com o peso das prioridades do cliente. Exemplo: horário de corte.</span></div>
+      <div class="rule"><b>Custo</b><span>Não escolhe o operador. Vira premissa da cotação. Exemplo: pedidos por mês.</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="fluxo">
+    <div class="section-head">
+      <h2 id="fluxo">Fluxo completo</h2>
+      <p>Cada coluna é quem faz. Cada faixa é uma fase. O tempo corre de cima para baixo.</p>
+    </div>
+    <div class="legend">
+      <span><i class="sw form"></i>Formulário</span>
+      <span><i class="sw"></i>Etapa</span>
+      <span><i class="sw dec"></i>Decisão</span>
+      <span>Linha tracejada: volta quando a resposta é não</span>
+    </div>
+    <p class="scroll-hint">Arraste o desenho para o lado para ver todas as colunas.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 960 1804" role="img" aria-label="Fluxo em cinco fases, do levantamento do cliente ao início da operação">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker>
+          <marker id="ah-loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah-loop"/></marker>
+        </defs>
+
+        <!-- Faixas das fases -->
+        <rect class="band-a" x="0" y="44" width="960" height="408"/>
+        <rect class="band-b" x="0" y="452" width="960" height="312"/>
+        <rect class="band-a" x="0" y="764" width="960" height="320"/>
+        <rect class="band-b" x="0" y="1084" width="960" height="312"/>
+        <rect class="band-a" x="0" y="1396" width="960" height="408"/>
+
+        <!-- Cabeçalho das raias -->
+        <rect class="lane-head" x="0" y="0" width="960" height="44"/>
+        <text class="phase-n" x="16" y="27">FASE</text>
+        <text class="lane-name" x="225" y="28" text-anchor="middle">Cliente</text>
+        <text class="lane-name" x="435" y="28" text-anchor="middle">Raz</text>
+        <text class="lane-name" x="645" y="28" text-anchor="middle">Consolida</text>
+        <text class="lane-name" x="855" y="28" text-anchor="middle">Operadores logísticos</text>
+
+        <!-- Divisões das raias -->
+        <line class="lane-edge" x1="120" y1="0" x2="120" y2="1804"/>
+        <line class="lane-line" x1="330" y1="44" x2="330" y2="1804"/>
+        <line class="lane-line" x1="540" y1="44" x2="540" y2="1804"/>
+        <line class="lane-line" x1="750" y1="44" x2="750" y2="1804"/>
+
+        <!-- Nomes das fases -->
+        <text class="phase-n" x="16" y="74">FASE 1</text>
+        <text class="phase-name" x="16" y="94">Levantamento</text>
+        <text class="phase-n" x="16" y="482">FASE 2</text>
+        <text class="phase-name" x="16" y="502">Aderência</text>
+        <text class="phase-n" x="16" y="794">FASE 3</text>
+        <text class="phase-name" x="16" y="814">Cotação</text>
+        <text class="phase-n" x="16" y="1114">FASE 4</text>
+        <text class="phase-name" x="16" y="1134">Proposta</text>
+        <text class="phase-n" x="16" y="1426">FASE 5</text>
+        <text class="phase-name" x="16" y="1446">Contratação</text>
+        <text class="phase-name" x="16" y="1464">e início</text>
+
+        <!-- Conectores -->
+        <path class="arrow" d="M435 144V204H320" marker-end="url(#ah)"/>
+        <path class="arrow" d="M260 240V300H550" marker-end="url(#ah)"/>
+        <path class="arrow" d="M645 336V362" marker-end="url(#ah)"/>
+        <path class="loop" d="M565 396H190V240" marker-end="url(#ah-loop)"/>
+        <path class="arrow" d="M645 430V576" marker-end="url(#ah)"/>
+        <path class="arrow" d="M815 552V612H740" marker-end="url(#ah)"/>
+        <path class="arrow" d="M645 648V672" marker-end="url(#ah)"/>
+        <path class="loop" d="M725 706H895V552" marker-end="url(#ah-loop)"/>
+        <path class="arrow" d="M645 740V800" marker-end="url(#ah)"/>
+        <path class="arrow" d="M740 836H855V896" marker-end="url(#ah)"/>
+        <path class="arrow" d="M855 968V1028H740" marker-end="url(#ah)"/>
+        <path class="arrow" d="M645 1064V1112" marker-end="url(#ah)"/>
+        <path class="arrow" d="M645 1184V1244H530" marker-end="url(#ah)"/>
+        <path class="arrow" d="M435 1280V1338H305" marker-end="url(#ah)"/>
+        <path class="loop" d="M225 1304V1028H550" marker-end="url(#ah-loop)"/>
+        <path class="arrow" d="M225 1372V1424" marker-end="url(#ah)"/>
+        <path class="arrow" d="M225 1496V1556H550" marker-end="url(#ah)"/>
+        <path class="arrow" d="M740 1556H855V1616" marker-end="url(#ah)"/>
+        <path class="arrow" d="M855 1688V1748H740" marker-end="url(#ah)"/>
+
+        <!-- Rótulos dos conectores -->
+        <text class="lbl-loop" x="555" y="388" text-anchor="end">não</text>
+        <text class="lbl" x="653" y="456">sim</text>
+        <text class="lbl-loop" x="762" y="728">não: busca novos</text>
+        <text class="lbl-loop" x="762" y="744">operadores na região</text>
+        <text class="lbl" x="653" y="768">sim</text>
+        <text class="lbl-loop" x="233" y="1150">não: ajusta</text>
+        <text class="lbl-loop" x="233" y="1166">ou troca o</text>
+        <text class="lbl-loop" x="233" y="1182">operador</text>
+        <text class="lbl" x="233" y="1400">sim</text>
+
+        <!-- Fase 1 -->
+        <rect class="box form" x="340" y="72" width="190" height="72" rx="8"/>
+        <text class="t" x="356" y="96"><tspan class="n form-n">1 </tspan>Conduz o levantamento</text>
+        <text class="t" x="356" y="112">com o formulário do</text>
+        <text class="t" x="356" y="128">cliente</text>
+
+        <rect class="box" x="130" y="168" width="190" height="72" rx="8"/>
+        <text class="t" x="146" y="192"><tspan class="n">2 </tspan>Envia a planilha de</text>
+        <text class="t" x="146" y="208">produtos e o plano de</text>
+        <text class="t" x="146" y="224">vendas</text>
+
+        <rect class="box" x="550" y="264" width="190" height="72" rx="8"/>
+        <text class="t" x="566" y="288"><tspan class="n">3 </tspan>Revisa o formulário e</text>
+        <text class="t" x="566" y="304">completa o que ficou</text>
+        <text class="t" x="566" y="320">em aberto</text>
+
+        <polygon class="dec" points="645,362 725,396 645,430 565,396"/>
+        <text class="td" x="645" y="393" text-anchor="middle">Informação</text>
+        <text class="td" x="645" y="409" text-anchor="middle">completa?</text>
+
+        <!-- Fase 2 -->
+        <rect class="box form" x="760" y="480" width="190" height="72" rx="8"/>
+        <text class="t" x="776" y="504"><tspan class="n form-n">4 </tspan>Preenche o formulário</text>
+        <text class="t" x="776" y="520">de competências</text>
+        <text class="tq" x="776" y="537">uma vez, e atualiza</text>
+
+        <rect class="box" x="550" y="576" width="190" height="72" rx="8"/>
+        <text class="t" x="566" y="600"><tspan class="n">5 </tspan>Cruza as respostas:</text>
+        <text class="t" x="566" y="616">corte e nota de</text>
+        <text class="t" x="566" y="632">aderência</text>
+
+        <polygon class="dec" points="645,672 725,706 645,740 565,706"/>
+        <text class="td" x="645" y="703" text-anchor="middle">Dois ou mais</text>
+        <text class="td" x="645" y="719" text-anchor="middle">aderentes?</text>
+
+        <!-- Fase 3 -->
+        <rect class="box" x="550" y="800" width="190" height="72" rx="8"/>
+        <text class="t" x="566" y="824"><tspan class="n">6 </tspan>Envia volumetria e</text>
+        <text class="t" x="566" y="840">planilha padrão, com</text>
+        <text class="t" x="566" y="856">cliente oculto</text>
+
+        <rect class="box" x="760" y="896" width="190" height="72" rx="8"/>
+        <text class="t" x="776" y="920"><tspan class="n">7 </tspan>Devolvem a planilha</text>
+        <text class="t" x="776" y="936">de preço preenchida</text>
+
+        <rect class="box" x="550" y="992" width="190" height="72" rx="8"/>
+        <text class="t" x="566" y="1016"><tspan class="n">8 </tspan>Simula o custo e</text>
+        <text class="t" x="566" y="1032">negocia a contraproposta</text>
+
+        <!-- Fase 4 -->
+        <rect class="box" x="550" y="1112" width="190" height="72" rx="8"/>
+        <text class="t" x="566" y="1136"><tspan class="n">9 </tspan>Monta a recomendação:</text>
+        <text class="t" x="566" y="1152">operador, custo e fluxo</text>
+        <text class="t" x="566" y="1168">operacional</text>
+
+        <rect class="box" x="340" y="1208" width="190" height="72" rx="8"/>
+        <text class="t" x="356" y="1232"><tspan class="n">10 </tspan>Apresenta ao cliente</text>
+        <text class="t" x="356" y="1248">junto com o Consolida</text>
+
+        <polygon class="dec" points="225,1304 305,1338 225,1372 145,1338"/>
+        <text class="td" x="225" y="1335" text-anchor="middle">Cliente</text>
+        <text class="td" x="225" y="1351" text-anchor="middle">aprova?</text>
+
+        <!-- Fase 5 -->
+        <rect class="box" x="130" y="1424" width="190" height="72" rx="8"/>
+        <text class="t" x="146" y="1448"><tspan class="n">11 </tspan>Contrata o operador</text>
+        <text class="t" x="146" y="1464">direto</text>
+        <text class="tq" x="146" y="1481">o nome do cliente vai agora</text>
+
+        <rect class="box" x="550" y="1520" width="190" height="72" rx="8"/>
+        <text class="t" x="566" y="1544"><tspan class="n">12 </tspan>Implanta: contrato,</text>
+        <text class="t" x="566" y="1560">integração e primeira</text>
+        <text class="t" x="566" y="1576">entrada de estoque</text>
+
+        <rect class="box" x="760" y="1616" width="190" height="72" rx="8"/>
+        <text class="t" x="776" y="1640"><tspan class="n">13 </tspan>Recebe o estoque e</text>
+        <text class="t" x="776" y="1656">expede o primeiro</text>
+        <text class="t" x="776" y="1672">pedido</text>
+
+        <rect class="box" x="550" y="1712" width="190" height="72" rx="8"/>
+        <text class="t" x="566" y="1736"><tspan class="n">14 </tspan>Acompanha os</text>
+        <text class="t" x="566" y="1752">indicadores com o</text>
+        <text class="t" x="566" y="1768">cliente</text>
+      </svg>
+    </div>
+  </section>
+
+  <section aria-labelledby="detalhe">
+    <div class="section-head">
+      <h2 id="detalhe">Etapas em detalhe</h2>
+      <p>O que acontece em cada etapa e o que sai dela.</p>
+    </div>
+    <div class="phases">
+      <div class="phase">
+        <h3><small>Fase 1</small>Levantamento</h3>
+        <ol class="steps">
+          <li class="step is-form"><span class="num">1</span><span class="who">Raz</span><span class="what">Conduz o levantamento com o cliente usando o formulário do cliente: produto, estoque, pedidos, picos, canais e prioridades. O que o cliente não souber fica marcado como "não sei".</span></li>
+          <li class="step"><span class="num">2</span><span class="who">Cliente</span><span class="what">Envia a planilha de produtos (medidas, peso, paletização) e o plano de vendas, que viram a base de volume.</span></li>
+          <li class="step"><span class="num">3</span><span class="who">Consolida</span><span class="what">Revisa as respostas e completa o que ficou em aberto numa conversa curta com o cliente.</span><span class="decision">Se ainda faltar informação, volta ao cliente.</span></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <h3><small>Fase 2</small>Aderência</h3>
+        <ol class="steps">
+          <li class="step is-form"><span class="num">4</span><span class="who">Operadores</span><span class="what">Preenchem o formulário de competências uma vez e atualizam quando algo muda: licenças, estrutura, capacidade, sistemas, nível de serviço e condições de contrato.</span></li>
+          <li class="step"><span class="num">5</span><span class="who">Consolida</span><span class="what">Cruza as respostas. O corte tira quem não atende um critério eliminatório, com o motivo registrado. A nota de aderência ordena os demais pelas prioridades do cliente.</span><span class="decision">Com menos de dois aderentes, o Consolida busca novos operadores na região, que preenchem o formulário e entram no cruzamento.</span></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <h3><small>Fase 3</small>Cotação</h3>
+        <ol class="steps">
+          <li class="step"><span class="num">6</span><span class="who">Consolida</span><span class="what">Envia a volumetria e a planilha de preço padrão só aos operadores aderentes, com o produto descrito sem o nome do cliente.</span></li>
+          <li class="step"><span class="num">7</span><span class="who">Operadores</span><span class="what">Devolvem a planilha preenchida, todos nos mesmos itens, para o preço de um ser comparável ao do outro.</span></li>
+          <li class="step"><span class="num">8</span><span class="who">Consolida</span><span class="what">Simula o custo por pedido e por mês com as mesmas premissas para todos e negocia a contraproposta com o operador mais aderente.</span></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <h3><small>Fase 4</small>Proposta</h3>
+        <ol class="steps">
+          <li class="step"><span class="num">9</span><span class="who">Consolida</span><span class="what">Monta a recomendação: operador indicado, custo simulado e o fluxo operacional etapa por etapa, do abastecimento à devolução.</span></li>
+          <li class="step"><span class="num">10</span><span class="who">Raz</span><span class="what">Apresenta ao cliente junto com o Consolida, dentro do planejamento que a Raz conduz.</span><span class="decision">Se o cliente não aprovar, volta à simulação para ajustar ou trocar o operador.</span></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <h3><small>Fase 5</small>Contratação e início</h3>
+        <ol class="steps">
+          <li class="step"><span class="num">11</span><span class="who">Cliente</span><span class="what">Contrata o operador direto. Só nesta etapa o operador fica sabendo quem é o cliente.</span></li>
+          <li class="step"><span class="num">12</span><span class="who">Consolida</span><span class="what">Implanta a operação: contrato com indicadores, integração dos sistemas e primeira entrada de estoque.</span></li>
+          <li class="step"><span class="num">13</span><span class="who">Operadores</span><span class="what">Recebe o estoque e expede o primeiro pedido.</span></li>
+          <li class="step"><span class="num">14</span><span class="who">Consolida</span><span class="what">Acompanha os indicadores e revisa a operação com o cliente.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="validar">
+    <div class="section-head">
+      <h2 id="validar">Pontos para validar</h2>
+      <p>Antes de produzir os formulários, precisamos fechar estes pontos. Basta responder citando o número da etapa.</p>
+    </div>
+    <ul class="checks">
+      <li><b>Etapa 1: quem conduz o levantamento</b><span>A Raz preenche o formulário junto com o cliente, e em qual fase do planejamento isso entra?</span></li>
+      <li><b>Etapa 5: mínimo de dois operadores aderentes</b><span>Seguir para a cotação só com dois ou mais operadores aprovados no corte faz sentido?</span></li>
+      <li><b>Etapa 10: quem apresenta a proposta</b><span>A Raz apresenta com o Consolida ao lado, ou o Consolida apresenta a parte logística?</span></li>
+      <li><b>Etapa 11: contrato direto</b><span>O cliente contrata o operador direto, sem relação financeira com o Consolida?</span></li>
+      <li><b>Etapas 6 a 10: cliente oculto</b><span>O nome do cliente fica com a Raz e o Consolida até a contratação?</span></li>
+    </ul>
+  </section>
+
+  <footer>Versão para validação, 7 de novembro de 2026.</footer>
+</div>
+</body>
+</html>
