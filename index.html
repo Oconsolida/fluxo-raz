@@ -6,229 +6,233 @@
 <title>Fluxo de aderência da Raz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
 <style>
-/* Layout: raias verticais (quem faz) e faixas horizontais (fases), o tempo corre de cima para baixo; detalhe e pontos de validação abaixo */
+/* Layout: faixa escura de abertura no padrão TSP, abas fixas no topo; aba 1 = desenho e etapas lado a lado; aba 2 = menu lateral fixo dos blocos e formulários lado a lado */
 :root {
-  --paper: #f5f6f8;
-  --surface: #ffffff;
-  --band: #eef1f5;
-  --head: #e4e8ef;
-  --ink: #1b2230;
-  --muted: #5a6372;
-  --line: #c6cdd7;
-  --accent: #4338ca;
-  --accent-soft: #e7e6fb;
-  --decide: #a85d12;
-  --decide-soft: #fbefe0;
-  --crit: #b4232a;
-  --crit-soft: #fbe9e9;
+  --navy: #021d29;
+  --text: #3d4756;
+  --muted: #6b7280;
+  --red: #ee2c48;
+  --red-ink: #c4162f;
+  --red-soft: #fdecef;
+  --paper: #f4f5f7;
+  --white: #ffffff;
+  --line: #e2e6eb;
+  --line-strong: #c9d0d8;
+  --navy-soft: #e8eef2;
   --teal: #0f766e;
-  --teal-soft: #e2f4f1;
-  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #12161d; --surface: #1a2029; --band: #161b23; --head: #222a35;
-    --ink: #e8ecf2; --muted: #a3acb9; --line: #3b4453;
-    --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18; --crit: #ff8a8f; --crit-soft: #3b1e22; --teal: #5fd4c4; --teal-soft: #15332f;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #12161d; --surface: #1a2029; --band: #161b23; --head: #222a35;
-  --ink: #e8ecf2; --muted: #a3acb9; --line: #3b4453;
-  --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18; --crit: #ff8a8f; --crit-soft: #3b1e22; --teal: #5fd4c4; --teal-soft: #15332f;
-  color-scheme: dark;
+  --teal-soft: #e3f3f0;
+  --hero-text: #c5d0d8;
+  --font: "Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
 }
 * { box-sizing: border-box; }
-body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.5;
-}
-.wrap {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding-block: 40px 64px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid;
-  gap: 48px;
-}
-.wrap > header { display: grid; gap: 16px; max-width: 70ch; }
-.eyebrow {
-  font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
-}
-h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
-h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 700; }
-h2 { font-size: 24px; font-weight: 600; }
-p { margin: 0; }
-.lead { font-size: 18px; color: var(--muted); }
-.rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.rule { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 4px; min-width: 0; }
-.rule b { font-size: 15px; }
-.rule span { color: var(--muted); font-size: 15px; }
-section { display: grid; gap: 20px; }
-.section-head { display: grid; gap: 6px; max-width: 70ch; }
-.section-head p { color: var(--muted); }
-.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; color: var(--muted); }
-.legend span { display: inline-flex; align-items: center; gap: 8px; }
-.sw { width: 18px; height: 14px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
-.sw.form { background: var(--accent-soft); border-color: var(--accent); }
-.sw.dec { background: var(--decide-soft); border-color: var(--decide); transform: rotate(45deg) scale(0.8); border-radius: 2px; }
-.diagram {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-}
-.diagram svg { display: block; width: 100%; min-width: 900px; height: auto; font-family: var(--font-body); }
-.scroll-hint { display: none; font-size: 14px; color: var(--muted); }
-@media (max-width: 720px) { .scroll-hint { display: block; } .rules { grid-template-columns: 1fr; } }
-
-/* SVG */
-.lane-head { fill: var(--head); }
-.lane-name { fill: var(--ink); font-size: 14px; font-weight: 700; }
-.band-a { fill: var(--band); }
-.band-b { fill: var(--surface); }
-.lane-line { stroke: var(--line); stroke-width: 1; stroke-dasharray: 4 5; }
-.lane-edge { stroke: var(--line); stroke-width: 1; }
-.phase-n { fill: var(--muted); font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; }
-.phase-name { fill: var(--ink); font-size: 13.5px; font-weight: 700; }
-.box { fill: var(--surface); stroke: var(--line); stroke-width: 1.25; }
-.box.form { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
-.dec { fill: var(--decide-soft); stroke: var(--decide); stroke-width: 1.5; }
-.t { fill: var(--ink); font-size: 13px; }
-.t .n { font-weight: 700; }
-.box.form + .t .n, .form-n { fill: var(--accent); }
-.tq { fill: var(--muted); font-size: 12px; font-style: italic; }
-.td { fill: var(--ink); font-size: 12.5px; font-weight: 600; }
-.arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
-.loop { fill: none; stroke: var(--decide); stroke-width: 1.4; stroke-dasharray: 5 4; }
-.ah { fill: var(--muted); }
-.ah-loop { fill: var(--decide); }
-.lbl { fill: var(--muted); font-size: 12px; font-weight: 600; }
-.lbl-loop { fill: var(--decide); font-size: 12px; font-weight: 600; }
-
-/* Detalhe */
-.phases { display: grid; gap: 16px; }
-.phase { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 14px; }
-.phase h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 600; }
-.phase h3 small { font-family: var(--font-body); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
-.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.step { display: grid; grid-template-columns: 2.25rem 8.5rem minmax(0, 1fr); gap: 4px 12px; align-items: baseline; }
-.step .num { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted); }
-.step .who { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
-.step .what { min-width: 0; }
-.step.is-form .num { color: var(--accent); }
-.step .decision { grid-column: 3; color: var(--decide); font-size: 15px; }
-@media (max-width: 560px) {
-  .step { grid-template-columns: 2rem minmax(0, 1fr); }
-  .step .who { grid-column: 2; }
-  .step .what, .step .decision { grid-column: 2; }
-}
-
-.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.checks li { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 4px; }
-.checks li b { font-size: 16px; }
-.checks li span { color: var(--muted); font-size: 15px; }
-footer { color: var(--muted); font-size: 14px; }
-
 [hidden] { display: none !important; }
+body { margin: 0; background: var(--paper); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--white); }
+h1, h2, h3, h4 { color: var(--navy); margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.gutter {
+  max-width: 1640px; margin: 0 auto;
+  padding-left: max(clamp(16px, 3vw, 48px), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(16px, 3vw, 48px), env(safe-area-inset-right, 0px));
+}
+.eyebrow { display: inline-block; color: var(--red); font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+
+/* Abertura */
+.hero { background: var(--navy); color: var(--white); }
+.hero .gutter { padding-block: 56px 48px; display: grid; gap: 18px; }
+.hero h1 { color: var(--white); font-size: clamp(32px, 4.4vw, 54px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; max-width: 20ch; }
+.hero .lead { color: var(--hero-text); font-size: 17px; max-width: 68ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px 28px; padding: 0; margin: 6px 0 0; list-style: none; font-size: 14px; font-weight: 500; }
+.facts li { display: inline-flex; align-items: center; gap: 10px; }
+.facts li::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: var(--red); }
+
 /* Abas */
-.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--white); border-bottom: 1px solid var(--line); }
+.tabbar .gutter { padding-block: 12px; display: flex; align-items: center; gap: 10px; overflow-x: auto; }
 .tab {
-  appearance: none; background: none; border: 0; border-bottom: 3px solid transparent;
-  font: inherit; font-weight: 700; font-size: 16px; color: var(--muted);
-  padding: 10px 16px 12px; cursor: pointer; white-space: nowrap; margin-bottom: -1px;
+  appearance: none; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  padding: 9px 20px; border-radius: 999px; border: 1.5px solid var(--navy); background: var(--white); color: var(--navy);
 }
-.tab span { font-weight: 600; font-variant-numeric: tabular-nums; margin-right: 6px; }
-.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.tab:focus-visible, .jump:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tab[aria-selected="true"] { background: var(--red); border-color: var(--red); color: var(--white); }
+.tab:focus-visible, .jump:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+.tabbar .note { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
+@media (max-width: 640px) { .tabbar .note { display: none; } }
+
+main .gutter { padding-block: 40px 72px; }
 .panel { display: grid; gap: 48px; }
+.sec { display: grid; gap: 18px; min-width: 0; }
+.sec-head { display: grid; gap: 6px; max-width: 72ch; }
+.sec-head h2 { font-size: clamp(24px, 2.4vw, 32px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+.sec-head p { color: var(--text); }
+.card { background: var(--white); border: 1px solid var(--line); border-radius: 14px; }
 
-/* Nota */
-.nota { margin: 0; padding-left: 1.4em; display: grid; gap: 10px; max-width: 75ch; }
-.nota li::marker { color: var(--muted); font-weight: 700; }
+/* Aba 1 */
+.flow-grid { display: grid; gap: 32px; align-items: start; }
+@media (min-width: 1360px) { .flow-grid { grid-template-columns: minmax(0, 1fr) 420px; } }
+@media (min-width: 1600px) { .flow-grid { grid-template-columns: minmax(0, 1fr) 480px; } }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 18px; height: 14px; border-radius: 3px; border: 1.25px solid var(--line-strong); background: var(--white); }
+.sw.form { background: var(--red-soft); border: 2px solid var(--red); }
+.sw.dec { background: var(--navy-soft); border-color: var(--navy); transform: rotate(45deg) scale(0.8); border-radius: 2px; }
+.sw.loop { width: 22px; height: 0; border: 0; border-top: 2px dashed var(--red); border-radius: 0; background: none; }
+.diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.diagram svg { display: block; width: 100%; min-width: 880px; height: auto; font-family: var(--font); }
+.scroll-hint { display: none; font-size: 13px; color: var(--muted); }
+@media (max-width: 900px) { .scroll-hint { display: block; } }
 
-/* Navegação por bloco */
-.jumps { display: flex; flex-wrap: wrap; gap: 8px; }
-.jump {
-  appearance: none; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink);
-  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
-  padding: 6px 12px; cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline;
+.lane-head { fill: var(--navy); }
+.lane-name { fill: var(--white); font-size: 13px; font-weight: 600; }
+.band-a { fill: #f8f9fb; }
+.band-b { fill: var(--white); }
+.lane-line { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 4 5; }
+.lane-edge { stroke: var(--line-strong); stroke-width: 1; }
+.phase-n { fill: var(--red); font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; }
+.phase-name { fill: var(--navy); font-size: 12.5px; font-weight: 700; }
+.box { fill: var(--white); stroke: var(--line-strong); stroke-width: 1.25; }
+.box.form { fill: var(--red-soft); stroke: var(--red); stroke-width: 2; }
+.dec { fill: var(--navy-soft); stroke: var(--navy); stroke-width: 1.5; }
+.t { fill: var(--navy); font-size: 11.8px; font-weight: 400; }
+.t .n { font-weight: 700; }
+.form-n { fill: var(--red-ink); }
+.tq { fill: var(--muted); font-size: 10.6px; font-style: italic; }
+.td { fill: var(--navy); font-size: 11.2px; font-weight: 600; }
+.arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+.loop { fill: none; stroke: var(--red); stroke-width: 1.4; stroke-dasharray: 5 4; }
+.ah { fill: var(--muted); }
+.ah-loop { fill: var(--red); }
+.lbl { fill: var(--muted); font-size: 11px; font-weight: 600; }
+.lbl-loop { fill: var(--red-ink); font-size: 11px; font-weight: 600; }
+
+.fases { display: grid; gap: 14px; }
+.fase { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 12px; }
+.fase header { display: grid; gap: 2px; }
+.fase h3 { font-size: 17px; font-weight: 700; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.step { display: grid; gap: 4px; padding-top: 12px; border-top: 1px solid var(--line); }
+.step:first-child { border-top: 0; padding-top: 0; }
+.step-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.step-num { color: var(--red); font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; }
+.step-who { color: var(--navy); font-weight: 700; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+.step-tag { font-size: 11px; font-weight: 700; color: var(--red-ink); background: var(--red-soft); border: 1px solid var(--red); border-radius: 999px; padding: 1px 8px; }
+.step p { font-size: 14.5px; }
+.step-dec { color: var(--navy); font-size: 13.5px !important; padding-left: 12px; border-left: 2px dashed var(--red); }
+
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+.checks li { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 4px; align-content: start; }
+.check-ref { color: var(--red); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.checks b { color: var(--navy); font-size: 16px; }
+.check-q { font-size: 14.5px; }
+
+/* Aba 2 */
+.forms-grid { display: grid; gap: 32px; align-items: start; }
+@media (min-width: 1180px) { .forms-grid { grid-template-columns: 270px minmax(0, 1fr); } }
+.side-nav { display: none; }
+@media (min-width: 1180px) {
+  .side-nav { display: grid; gap: 14px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 84px); max-height: calc(100vh - 110px); overflow-y: auto; padding: 18px; }
 }
-.jump span { font-weight: 400; color: var(--muted); }
-.jump:hover { border-color: var(--accent); }
+.side-nav h2 { font-size: 15px; }
+.side-nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.jump { appearance: none; font: inherit; width: 100%; text-align: left; background: none; border: 0; border-radius: 8px; padding: 7px 8px; cursor: pointer; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; color: var(--navy); }
+.jump:hover { background: var(--paper); }
+.jl { font-weight: 700; color: var(--red); }
+.jn { font-size: 13.5px; font-weight: 500; }
+.jc { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.side-key { display: grid; gap: 6px; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+.side-key div { display: flex; align-items: center; gap: 8px; }
+.jumps-inline { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (min-width: 1180px) { .jumps-inline { display: none; } }
+.jumps-inline .jump { width: auto; display: inline-flex; gap: 6px; border: 1px solid var(--line-strong); background: var(--white); border-radius: 999px; padding: 6px 12px; }
 
-/* Blocos */
-.blocks { display: grid; gap: 20px; }
-.block { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; scroll-margin-top: 16px; }
-.block-head { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-bottom: 1px solid var(--line); background: var(--band); }
-.block-letter {
-  flex: none; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center;
-  font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--accent);
-  background: var(--accent-soft); border: 1px solid var(--accent);
-}
-.block-head h3 { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 600; }
-.block-head p { color: var(--muted); font-size: 15px; }
+.roles { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 720px) { .roles { grid-template-columns: 1fr; } }
+.role { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 8px; align-content: start; }
+.role p { font-size: 14.5px; }
+.nota { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); counter-reset: n; }
+@media (max-width: 980px) { .nota { grid-template-columns: 1fr; } }
+.nota li { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 6px; align-content: start; counter-increment: n; font-size: 14.5px; }
+.nota li::before { content: "0" counter(n); color: var(--red); font-weight: 700; font-size: 13px; }
+.nota b { color: var(--navy); font-size: 16px; }
+
+.blocks { display: grid; gap: 22px; }
+.block { background: var(--white); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 96px; }
+.block-head { display: flex; gap: 14px; align-items: center; padding: 16px 22px; background: var(--navy); }
+.block-letter { flex: none; width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 18px; color: var(--white); background: var(--red); }
+.block-head h3 { color: var(--white); font-size: 18px; font-weight: 700; }
+.block-head p { color: var(--hero-text); font-size: 14px; }
 .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.side { padding: 16px 20px 20px; min-width: 0; display: grid; gap: 10px; align-content: start; }
-.side + .side { border-left: 1px solid var(--line); }
-.side h4 { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.side h4 small { font-size: 13px; font-weight: 600; color: var(--muted); margin-left: 4px; letter-spacing: 0; }
+.side { padding: 16px 22px 20px; min-width: 0; display: grid; gap: 8px; align-content: start; }
+.side + .side { border-left: 1px solid var(--line); background: #fbfcfd; }
+.side h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); }
+.side h4 small { color: var(--muted); font-size: 12px; letter-spacing: 0; margin-left: 4px; }
 .qs { list-style: none; margin: 0; padding: 0; display: grid; }
-.q { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) auto; gap: 2px 10px; padding: 10px 0; border-top: 1px solid var(--line); align-items: start; }
-.q:first-child { border-top: 0; padding-top: 2px; }
-.qn { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; padding-top: 1px; }
+.q { display: grid; grid-template-columns: 2.7rem minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--line); align-items: start; }
+.q:first-child { border-top: 0; padding-top: 4px; }
+.qn { font-weight: 700; color: var(--navy); font-size: 13.5px; font-variant-numeric: tabular-nums; padding-top: 1px; }
 .qb { display: grid; gap: 2px; min-width: 0; }
-.qt { font-size: 15px; line-height: 1.4; }
-.qo { font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+.qt { color: var(--navy); font-size: 14.5px; font-weight: 500; line-height: 1.45; }
+.qo { font-size: 13px; color: var(--muted); line-height: 1.45; }
 .chips { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
-.chip { font-style: normal; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
-.c-corta { color: var(--crit); background: var(--crit-soft); border-color: var(--crit); }
-.c-pontua { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
+.chip { font-style: normal; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
+.c-corta { color: var(--red-ink); background: var(--red-soft); border-color: var(--red); }
+.c-pontua { color: var(--navy); background: var(--navy-soft); border-color: var(--navy); }
 .c-custo { color: var(--teal); background: var(--teal-soft); border-color: var(--teal); }
-.c-neutro { color: var(--muted); background: var(--band); border-color: var(--line); }
-@media (max-width: 760px) {
+.c-neutro { color: var(--muted); background: var(--paper); border-color: var(--line-strong); }
+@media (max-width: 860px) {
   .pair { grid-template-columns: 1fr; }
   .side + .side { border-left: 0; border-top: 1px solid var(--line); }
-  .q { grid-template-columns: 2.4rem minmax(0, 1fr); }
+  .q { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .chips { grid-column: 2; flex-direction: row; align-items: center; justify-content: flex-start; }
 }
+footer.foot { color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 </style>
-<style>body{margin:0}</style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="eyebrow">Projeto Raz · Logística</div>
+<div class="hero">
+  <div class="gutter">
+    <span class="eyebrow">Projeto Raz · Logística</span>
     <h1>Fluxo e formulários de aderência</h1>
     <p class="lead">Como a Raz e o Consolida levam cada cliente do primeiro levantamento até o operador logístico certo, e o que perguntamos ao cliente e ao operador para fazer essa escolha.</p>
-  </header>
-
-  <div class="tabs" role="tablist" aria-label="Conteúdo">
-    <button type="button" class="tab" role="tab" id="tab-fluxo" aria-controls="panel-fluxo" aria-selected="true"><span>1</span>Fluxo</button>
-    <button type="button" class="tab" role="tab" id="tab-formularios" aria-controls="panel-formularios" aria-selected="false" tabindex="-1"><span>2</span>Formulários</button>
+    <ul class="facts">
+      <li>5 fases e 14 etapas</li>
+      <li>74 perguntas para o cliente</li>
+      <li>93 perguntas para o operador</li>
+      <li>12 blocos iguais nos dois formulários</li>
+    </ul>
   </div>
+</div>
 
-  <div class="panel" id="panel-fluxo" role="tabpanel" aria-labelledby="tab-fluxo">
-  <section aria-labelledby="fluxo">
-    <div class="section-head">
-      <h2 id="fluxo">Fluxo completo</h2>
-      <p>Cada coluna é quem faz. Cada faixa é uma fase. O tempo corre de cima para baixo.</p>
-    </div>
-    <div class="legend">
-      <span><i class="sw form"></i>Formulário</span>
-      <span><i class="sw"></i>Etapa</span>
-      <span><i class="sw dec"></i>Decisão</span>
-      <span>Linha tracejada: volta quando a resposta é não</span>
-    </div>
-    <p class="scroll-hint">Arraste o desenho para o lado para ver todas as colunas.</p>
-    <div class="diagram">
-      <svg viewBox="0 0 960 1804" role="img" aria-label="Fluxo em cinco fases, do levantamento do cliente ao início da operação">
+<nav class="tabbar" aria-label="Conteúdo">
+  <div class="gutter" role="tablist">
+    <button type="button" class="tab" role="tab" id="tab-fluxo" aria-controls="panel-fluxo" aria-selected="true">1. Fluxo</button>
+    <button type="button" class="tab" role="tab" id="tab-formularios" aria-controls="panel-formularios" aria-selected="false" tabindex="-1">2. Formulários</button>
+    <span class="note">Versão para validação, 7 nov 2026</span>
+  </div>
+</nav>
+
+<main>
+  <div class="gutter">
+    <div class="panel" id="panel-fluxo" role="tabpanel" aria-labelledby="tab-fluxo">
+      <div class="flow-grid">
+        <section class="sec" aria-labelledby="h-fluxo">
+          <div class="sec-head">
+            <span class="eyebrow">Fluxo completo</span>
+            <h2 id="h-fluxo">Do levantamento à operação</h2>
+            <p>Cada coluna é quem faz. Cada faixa é uma fase. O tempo corre de cima para baixo.</p>
+          </div>
+          <div class="legend">
+          <span><i class="sw form"></i>Formulário</span>
+          <span><i class="sw"></i>Etapa</span>
+          <span><i class="sw dec"></i>Decisão</span>
+          <span><i class="sw loop"></i>Volta quando a resposta é não</span>
+        </div>
+          <p class="scroll-hint">Arraste o desenho para o lado para ver todas as colunas.</p>
+          <div class="card diagram">
+            <svg viewBox="0 0 960 1804" role="img" aria-label="Fluxo em cinco fases, do levantamento do cliente ao início da operação">
         <defs>
           <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker>
           <marker id="ah-loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah-loop"/></marker>
@@ -384,104 +388,64 @@ footer { color: var(--muted); font-size: 14px; }
         <text class="t" x="566" y="1752">indicadores com o</text>
         <text class="t" x="566" y="1768">cliente</text>
       </svg>
-    </div>
-  </section>
-
-  <section aria-labelledby="detalhe">
-    <div class="section-head">
-      <h2 id="detalhe">Etapas em detalhe</h2>
-      <p>O que acontece em cada etapa e o que sai dela.</p>
-    </div>
-    <div class="phases">
-      <div class="phase">
-        <h3><small>Fase 1</small>Levantamento</h3>
-        <ol class="steps">
-          <li class="step is-form"><span class="num">1</span><span class="who">Raz</span><span class="what">Conduz o levantamento com o cliente usando o formulário do cliente: produto, estoque, pedidos, picos, canais e prioridades. O que o cliente não souber fica marcado como "não sei".</span></li>
-          <li class="step"><span class="num">2</span><span class="who">Cliente</span><span class="what">Envia a planilha de produtos (medidas, peso, paletização) e o plano de vendas, que viram a base de volume.</span></li>
-          <li class="step"><span class="num">3</span><span class="who">Consolida</span><span class="what">Revisa as respostas e completa o que ficou em aberto numa conversa curta com o cliente.</span><span class="decision">Se ainda faltar informação, volta ao cliente.</span></li>
-        </ol>
+          </div>
+        </section>
+        <section class="sec" aria-labelledby="h-etapas">
+          <div class="sec-head">
+            <span class="eyebrow">Etapas em detalhe</span>
+            <h2 id="h-etapas">O que acontece em cada etapa</h2>
+          </div>
+          <div class="fases"><article class="fase"><header><span class="eyebrow">Fase 1</span><h3>Levantamento</h3></header><ol class="steps"><li class="step is-form"><div class="step-top"><span class="step-num">01</span><span class="step-who">Raz</span><span class="step-tag">Formulário</span></div><p>Conduz o levantamento com o cliente usando o formulário do cliente: produto, estoque, pedidos, picos, canais e prioridades. O que o cliente não souber fica marcado como &quot;não sei&quot;.</p></li><li class="step"><div class="step-top"><span class="step-num">02</span><span class="step-who">Cliente</span></div><p>Envia a planilha de produtos (medidas, peso, paletização) e o plano de vendas, que viram a base de volume.</p></li><li class="step"><div class="step-top"><span class="step-num">03</span><span class="step-who">Consolida</span></div><p>Revisa as respostas e completa o que ficou em aberto numa conversa curta com o cliente.</p><p class="step-dec">Se ainda faltar informação, volta ao cliente.</p></li></ol></article><article class="fase"><header><span class="eyebrow">Fase 2</span><h3>Aderência</h3></header><ol class="steps"><li class="step is-form"><div class="step-top"><span class="step-num">04</span><span class="step-who">Operadores</span><span class="step-tag">Formulário</span></div><p>Preenchem o formulário de competências uma vez e atualizam quando algo muda: licenças, estrutura, capacidade, sistemas, nível de serviço e contrato.</p></li><li class="step"><div class="step-top"><span class="step-num">05</span><span class="step-who">Consolida</span></div><p>Cruza as respostas. O corte tira quem não atende um critério eliminatório, com o motivo registrado. A nota de aderência ordena os demais pelas prioridades do cliente.</p><p class="step-dec">Com menos de dois aderentes, o Consolida busca novos operadores na região, que preenchem o formulário e entram no cruzamento.</p></li></ol></article><article class="fase"><header><span class="eyebrow">Fase 3</span><h3>Cotação</h3></header><ol class="steps"><li class="step"><div class="step-top"><span class="step-num">06</span><span class="step-who">Consolida</span></div><p>Envia a volumetria e a planilha de preço padrão só aos operadores aderentes, com o produto descrito sem o nome do cliente.</p></li><li class="step"><div class="step-top"><span class="step-num">07</span><span class="step-who">Operadores</span></div><p>Devolvem a planilha preenchida, todos nos mesmos itens, para o preço de um ser comparável ao do outro.</p></li><li class="step"><div class="step-top"><span class="step-num">08</span><span class="step-who">Consolida</span></div><p>Simula o custo por pedido e por mês com as mesmas premissas para todos e negocia a contraproposta com o operador mais aderente.</p></li></ol></article><article class="fase"><header><span class="eyebrow">Fase 4</span><h3>Proposta</h3></header><ol class="steps"><li class="step"><div class="step-top"><span class="step-num">09</span><span class="step-who">Consolida</span></div><p>Monta a recomendação: operador indicado, custo simulado e o fluxo operacional etapa por etapa, do abastecimento à devolução.</p></li><li class="step"><div class="step-top"><span class="step-num">10</span><span class="step-who">Raz</span></div><p>Apresenta ao cliente junto com o Consolida, dentro do planejamento que a Raz conduz.</p><p class="step-dec">Se o cliente não aprovar, volta à simulação para ajustar ou trocar o operador.</p></li></ol></article><article class="fase"><header><span class="eyebrow">Fase 5</span><h3>Contratação e início</h3></header><ol class="steps"><li class="step"><div class="step-top"><span class="step-num">11</span><span class="step-who">Cliente</span></div><p>Contrata o operador direto. Só nesta etapa o operador fica sabendo quem é o cliente.</p></li><li class="step"><div class="step-top"><span class="step-num">12</span><span class="step-who">Consolida</span></div><p>Implanta a operação: contrato com indicadores, integração dos sistemas e primeira entrada de estoque.</p></li><li class="step"><div class="step-top"><span class="step-num">13</span><span class="step-who">Operadores</span></div><p>Recebe o estoque e expede o primeiro pedido.</p></li><li class="step"><div class="step-top"><span class="step-num">14</span><span class="step-who">Consolida</span></div><p>Acompanha os indicadores e revisa a operação com o cliente.</p></li></ol></article></div>
+        </section>
       </div>
-      <div class="phase">
-        <h3><small>Fase 2</small>Aderência</h3>
-        <ol class="steps">
-          <li class="step is-form"><span class="num">4</span><span class="who">Operadores</span><span class="what">Preenchem o formulário de competências uma vez e atualizam quando algo muda: licenças, estrutura, capacidade, sistemas, nível de serviço e condições de contrato.</span></li>
-          <li class="step"><span class="num">5</span><span class="who">Consolida</span><span class="what">Cruza as respostas. O corte tira quem não atende um critério eliminatório, com o motivo registrado. A nota de aderência ordena os demais pelas prioridades do cliente.</span><span class="decision">Com menos de dois aderentes, o Consolida busca novos operadores na região, que preenchem o formulário e entram no cruzamento.</span></li>
-        </ol>
-      </div>
-      <div class="phase">
-        <h3><small>Fase 3</small>Cotação</h3>
-        <ol class="steps">
-          <li class="step"><span class="num">6</span><span class="who">Consolida</span><span class="what">Envia a volumetria e a planilha de preço padrão só aos operadores aderentes, com o produto descrito sem o nome do cliente.</span></li>
-          <li class="step"><span class="num">7</span><span class="who">Operadores</span><span class="what">Devolvem a planilha preenchida, todos nos mesmos itens, para o preço de um ser comparável ao do outro.</span></li>
-          <li class="step"><span class="num">8</span><span class="who">Consolida</span><span class="what">Simula o custo por pedido e por mês com as mesmas premissas para todos e negocia a contraproposta com o operador mais aderente.</span></li>
-        </ol>
-      </div>
-      <div class="phase">
-        <h3><small>Fase 4</small>Proposta</h3>
-        <ol class="steps">
-          <li class="step"><span class="num">9</span><span class="who">Consolida</span><span class="what">Monta a recomendação: operador indicado, custo simulado e o fluxo operacional etapa por etapa, do abastecimento à devolução.</span></li>
-          <li class="step"><span class="num">10</span><span class="who">Raz</span><span class="what">Apresenta ao cliente junto com o Consolida, dentro do planejamento que a Raz conduz.</span><span class="decision">Se o cliente não aprovar, volta à simulação para ajustar ou trocar o operador.</span></li>
-        </ol>
-      </div>
-      <div class="phase">
-        <h3><small>Fase 5</small>Contratação e início</h3>
-        <ol class="steps">
-          <li class="step"><span class="num">11</span><span class="who">Cliente</span><span class="what">Contrata o operador direto. Só nesta etapa o operador fica sabendo quem é o cliente.</span></li>
-          <li class="step"><span class="num">12</span><span class="who">Consolida</span><span class="what">Implanta a operação: contrato com indicadores, integração dos sistemas e primeira entrada de estoque.</span></li>
-          <li class="step"><span class="num">13</span><span class="who">Operadores</span><span class="what">Recebe o estoque e expede o primeiro pedido.</span></li>
-          <li class="step"><span class="num">14</span><span class="who">Consolida</span><span class="what">Acompanha os indicadores e revisa a operação com o cliente.</span></li>
-        </ol>
-      </div>
+      <section class="sec" aria-labelledby="h-val1">
+        <div class="sec-head">
+          <span class="eyebrow">Para validar</span>
+          <h2 id="h-val1">Pontos do fluxo</h2>
+          <p>Antes de produzir os formulários, precisamos fechar estes pontos. Basta responder citando a etapa.</p>
+        </div>
+        <ul class="checks"><li><span class="check-ref">Etapa 01</span><b>Quem conduz o levantamento</b><span class="check-q">A Raz preenche o formulário junto com o cliente? Em qual fase do planejamento isso entra?</span></li><li><span class="check-ref">Etapa 05</span><b>Mínimo de dois operadores aderentes</b><span class="check-q">Seguir para a cotação só com dois ou mais operadores aprovados no corte faz sentido?</span></li><li><span class="check-ref">Etapa 10</span><b>Quem apresenta a proposta</b><span class="check-q">A Raz apresenta com o Consolida ao lado, ou o Consolida apresenta a parte logística?</span></li><li><span class="check-ref">Etapa 11</span><b>Contrato direto</b><span class="check-q">O cliente contrata o operador direto, sem relação financeira com o Consolida?</span></li><li><span class="check-ref">Etapas 06 a 10</span><b>Cliente oculto</b><span class="check-q">O nome do cliente fica com a Raz e o Consolida até a contratação?</span></li></ul>
+      </section>
     </div>
-  </section>
 
-  <section aria-labelledby="validar">
-    <div class="section-head">
-      <h2 id="validar">Pontos para validar</h2>
-      <p>Antes de produzir os formulários, precisamos fechar estes pontos. Basta responder citando o número da etapa.</p>
-    </div>
-    <ul class="checks">
-      <li><b>Etapa 1: quem conduz o levantamento</b><span>A Raz preenche o formulário junto com o cliente, e em qual fase do planejamento isso entra?</span></li>
-      <li><b>Etapa 5: mínimo de dois operadores aderentes</b><span>Seguir para a cotação só com dois ou mais operadores aprovados no corte faz sentido?</span></li>
-      <li><b>Etapa 10: quem apresenta a proposta</b><span>A Raz apresenta com o Consolida ao lado, ou o Consolida apresenta a parte logística?</span></li>
-      <li><b>Etapa 11: contrato direto</b><span>O cliente contrata o operador direto, sem relação financeira com o Consolida?</span></li>
-      <li><b>Etapas 6 a 10: cliente oculto</b><span>O nome do cliente fica com a Raz e o Consolida até a contratação?</span></li>
-    </ul>
-  </section>
-  </div>
+    <div class="panel" id="panel-formularios" role="tabpanel" aria-labelledby="tab-formularios" hidden>
+      <div class="forms-grid">
+        <aside class="card side-nav" aria-label="Blocos">
+          <h2>Blocos</h2>
+          <ul><li><button type="button" class="jump" data-target="bloco-0"><span class="jl">0</span><span class="jn">Identificação</span><span class="jc">4 · 6</span></button></li><li><button type="button" class="jump" data-target="bloco-A"><span class="jl">A</span><span class="jn">Produto e segmento</span><span class="jc">13 · 8</span></button></li><li><button type="button" class="jump" data-target="bloco-B"><span class="jl">B</span><span class="jn">Licenças e exigências legais</span><span class="jc">5 · 10</span></button></li><li><button type="button" class="jump" data-target="bloco-C"><span class="jl">C</span><span class="jn">Origem e recebimento</span><span class="jc">8 · 7</span></button></li><li><button type="button" class="jump" data-target="bloco-D"><span class="jl">D</span><span class="jn">Armazenagem e estoque</span><span class="jc">5 · 6</span></button></li><li><button type="button" class="jump" data-target="bloco-E"><span class="jl">E</span><span class="jn">Pedidos, separação e embalagem</span><span class="jc">13 · 9</span></button></li><li><button type="button" class="jump" data-target="bloco-F"><span class="jl">F</span><span class="jn">Volume e picos</span><span class="jc">5 · 6</span></button></li><li><button type="button" class="jump" data-target="bloco-G"><span class="jl">G</span><span class="jn">Transporte e distribuição</span><span class="jc">7 · 11</span></button></li><li><button type="button" class="jump" data-target="bloco-H"><span class="jl">H</span><span class="jn">Devolução</span><span class="jc">3 · 4</span></button></li><li><button type="button" class="jump" data-target="bloco-I"><span class="jl">I</span><span class="jn">Sistemas e integração</span><span class="jc">3 · 6</span></button></li><li><button type="button" class="jump" data-target="bloco-J"><span class="jl">J</span><span class="jn">Nível de serviço e responsabilidade</span><span class="jc">4 · 8</span></button></li><li><button type="button" class="jump" data-target="bloco-K"><span class="jl">K</span><span class="jn">Condições comerciais e contrato</span><span class="jc">4 · 12</span></button></li></ul>
+          <div class="side-key">
+          <div><i class="chip c-corta">Corta</i>tira o operador da lista</div>
+          <div><i class="chip c-pontua">Pontua</i>soma na nota</div>
+          <div><i class="chip c-custo">Custo</i>vira premissa da cotação</div>
+        </div>
+        </aside>
+        <div class="panel">
+          <section class="sec" aria-labelledby="h-cruza">
+            <div class="sec-head">
+              <span class="eyebrow">Como se cruzam</span>
+              <h2 id="h-cruza">Cada resposta do cliente tem um papel</h2>
+              <p>O formulário do cliente diz o que a operação precisa. O do operador diz o que ele atende. Os dois usam os mesmos blocos e as mesmas opções.</p>
+            </div>
+            <div class="roles">
+              <div class="role"><i class="chip c-corta" style="justify-self:start">Corta</i><p>Tira da lista o operador que não atende. Exemplo: produto alimentício e operador sem licença sanitária.</p></div>
+              <div class="role"><i class="chip c-pontua" style="justify-self:start">Pontua</i><p>Soma na nota de aderência, com o peso das prioridades do cliente. Exemplo: horário de corte.</p></div>
+              <div class="role"><i class="chip c-custo" style="justify-self:start">Custo</i><p>Não escolhe o operador. Vira premissa da cotação. Exemplo: pedidos por mês.</p></div>
+            </div>
+            <ol class="nota">
+              <li><b>Corte</b>Basta uma resposta Corta sem atendimento para o operador sair da lista. O motivo fica registrado.</li>
+              <li><b>Pontos</b>Cada resposta Pontua vale 2 quando o operador atende, 1 quando atende com custo extra ou aviso, e 0 quando não atende. O que o operador não informa conta como não atende.</li>
+              <li><b>Peso e nota</b>A prioridade do cliente (J2) multiplica os critérios ligados a ela. Verde a partir de 80%, amarelo de 60% a 79%, vermelho abaixo de 60%. Custo decide depois, na simulação.</li>
+            </ol>
+          </section>
 
-  <div class="panel" id="panel-formularios" role="tabpanel" aria-labelledby="tab-formularios" hidden>
-  <section aria-labelledby="regras">
-    <div class="section-head">
-      <h2 id="regras">Como os dois formulários se cruzam</h2>
-      <p>O formulário do cliente diz o que a operação precisa. O do operador diz o que ele atende. Os dois usam os mesmos blocos e as mesmas opções, e cada resposta tem um de três papéis.</p>
-    </div>
-    <div class="rules">
-      <div class="rule"><b>Corta</b><span>Tira da lista o operador que não atende. Exemplo: produto alimentício e operador sem licença sanitária.</span></div>
-      <div class="rule"><b>Pontua</b><span>Soma na nota de aderência, com o peso das prioridades do cliente. Exemplo: horário de corte.</span></div>
-      <div class="rule"><b>Custo</b><span>Não escolhe o operador. Vira premissa da cotação. Exemplo: pedidos por mês.</span></div>
-    </div>
-  </section>
-
-  <section aria-labelledby="nota">
-    <div class="section-head">
-      <h2 id="nota">Como sai a nota de aderência</h2>
-      <p>O cruzamento roda em três passos, sempre com as respostas dos dois formulários.</p>
-    </div>
-    <ol class="nota">
-      <li><b>Corte.</b> Basta uma resposta com papel Corta sem atendimento para o operador sair da lista. O motivo fica registrado.</li>
-      <li><b>Pontos.</b> Cada resposta com papel Pontua vale 2 quando o operador atende, 1 quando atende com custo extra ou aviso, e 0 quando não atende ou não informou. O que o operador não informa conta como não atende.</li>
-      <li><b>Peso e nota.</b> A ordem de prioridade do cliente (J2) multiplica os critérios ligados a ela. A nota é a soma dividida pelo máximo possível: verde a partir de 80%, amarelo de 60% a 79%, vermelho abaixo de 60%. Custo fica fora da nota e decide na simulação.</li>
-    </ol>
-  </section>
-
-  <section aria-labelledby="blocos">
-    <div class="section-head">
-      <h2 id="blocos">Os dois formulários, bloco por bloco</h2>
-      <p>À esquerda, o que perguntamos ao cliente (74 perguntas). À direita, o que o operador declara (93 perguntas). A etiqueta mostra o papel de cada resposta do cliente no cruzamento.</p>
-    </div>
-    <nav class="jumps" aria-label="Ir para o bloco"><button type="button" class="jump" data-target="bloco-0">0<span>Identificação</span></button><button type="button" class="jump" data-target="bloco-A">A<span>Produto e segmento</span></button><button type="button" class="jump" data-target="bloco-B">B<span>Licenças e exigências legais</span></button><button type="button" class="jump" data-target="bloco-C">C<span>Origem e recebimento</span></button><button type="button" class="jump" data-target="bloco-D">D<span>Armazenagem e estoque</span></button><button type="button" class="jump" data-target="bloco-E">E<span>Pedidos, separação e embalagem</span></button><button type="button" class="jump" data-target="bloco-F">F<span>Volume e picos</span></button><button type="button" class="jump" data-target="bloco-G">G<span>Transporte e distribuição</span></button><button type="button" class="jump" data-target="bloco-H">H<span>Devolução</span></button><button type="button" class="jump" data-target="bloco-I">I<span>Sistemas e integração</span></button><button type="button" class="jump" data-target="bloco-J">J<span>Nível de serviço e responsabilidade</span></button><button type="button" class="jump" data-target="bloco-K">K<span>Condições comerciais e contrato</span></button></nav>
-    <div class="blocks"><article class="block" id="bloco-0">
+          <section class="sec" aria-labelledby="h-blocos">
+            <div class="sec-head">
+              <span class="eyebrow">Os dois formulários</span>
+              <h2 id="h-blocos">Bloco por bloco, lado a lado</h2>
+              <p>À esquerda, o que perguntamos ao cliente. À direita, o que o operador declara. A etiqueta mostra o papel de cada resposta do cliente.</p>
+            </div>
+            <div class="jumps-inline"><button type="button" class="jump" data-target="bloco-0"><span class="jl">0</span><span class="jn">Identificação</span></button><button type="button" class="jump" data-target="bloco-A"><span class="jl">A</span><span class="jn">Produto e segmento</span></button><button type="button" class="jump" data-target="bloco-B"><span class="jl">B</span><span class="jn">Licenças e exigências legais</span></button><button type="button" class="jump" data-target="bloco-C"><span class="jl">C</span><span class="jn">Origem e recebimento</span></button><button type="button" class="jump" data-target="bloco-D"><span class="jl">D</span><span class="jn">Armazenagem e estoque</span></button><button type="button" class="jump" data-target="bloco-E"><span class="jl">E</span><span class="jn">Pedidos, separação e embalagem</span></button><button type="button" class="jump" data-target="bloco-F"><span class="jl">F</span><span class="jn">Volume e picos</span></button><button type="button" class="jump" data-target="bloco-G"><span class="jl">G</span><span class="jn">Transporte e distribuição</span></button><button type="button" class="jump" data-target="bloco-H"><span class="jl">H</span><span class="jn">Devolução</span></button><button type="button" class="jump" data-target="bloco-I"><span class="jl">I</span><span class="jn">Sistemas e integração</span></button><button type="button" class="jump" data-target="bloco-J"><span class="jl">J</span><span class="jn">Nível de serviço e responsabilidade</span></button><button type="button" class="jump" data-target="bloco-K"><span class="jl">K</span><span class="jn">Condições comerciais e contrato</span></button></div>
+            <div class="blocks"><article class="block" id="bloco-0">
   <header class="block-head"><span class="block-letter">0</span><div><h3>Identificação</h3><p>Quem é quem. Do lado do cliente, fica só com a Raz e o Consolida.</p></div></header>
   <div class="pair">
     <div class="side"><h4>Cliente informa <small>4</small></h4><ul class="qs"><li class="q"><span class="qn">0.1</span><span class="qb"><span class="qt">Empresa, CNPJ e contato</span><span class="qo">Texto</span></span><span class="chips"><i class="chip c-neutro">Não cruza</i></span></li><li class="q"><span class="qn">0.2</span><span class="qb"><span class="qt">Quem decide a logística</span><span class="qo">Nome e cargo</span></span><span class="chips"><i class="chip c-neutro">Não cruza</i></span></li><li class="q"><span class="qn">0.3</span><span class="qb"><span class="qt">Como a logística funciona hoje</span><span class="qo">Própria · Terceirizada · Ainda não vende</span></span><span class="chips"><i class="chip c-neutro">Não cruza</i></span></li><li class="q"><span class="qn">0.4</span><span class="qb"><span class="qt">O que precisa contratar</span><span class="qo">Armazenagem · fulfillment · transporte · last mile · coleta na origem</span></span><span class="chips"><i class="chip c-neutro">Define os blocos</i></span></li></ul></div>
@@ -554,56 +518,55 @@ footer { color: var(--muted); font-size: 14px; }
     <div class="side"><h4>Operador declara <small>12</small></h4><ul class="qs"><li class="q"><span class="qn">K1</span><span class="qb"><span class="qt">Modelo de cobrança</span><span class="qo">Por item · Preço fechado por pedido · Percentual sobre a nota · Mensalidade</span></span></li><li class="q"><span class="qn">K2</span><span class="qb"><span class="qt">Armazenagem cobrada por</span><span class="qo">Posição-palete · m² · m³ · unidade</span></span></li><li class="q"><span class="qn">K3</span><span class="qb"><span class="qt">Ad valorem sobre o estoque</span><span class="qo">Não · Sim, percentual</span></span></li><li class="q"><span class="qn">K4</span><span class="qb"><span class="qt">Mínimo mensal</span><span class="qo">Não tem · R$</span></span></li><li class="q"><span class="qn">K5</span><span class="qb"><span class="qt">Taxa de implantação</span><span class="qo">Não tem · R$</span></span></li><li class="q"><span class="qn">K6</span><span class="qb"><span class="qt">Prazo mínimo de contrato</span><span class="qo">Sem prazo · 6 · 12 · 24 meses</span></span></li><li class="q"><span class="qn">K7</span><span class="qb"><span class="qt">Multa de saída antecipada</span><span class="qo">Não tem · Valor</span></span></li><li class="q"><span class="qn">K8</span><span class="qb"><span class="qt">Prazo de implantação depois da assinatura</span><span class="qo">Dias</span></span></li><li class="q"><span class="qn">K9</span><span class="qb"><span class="qt">Preços com impostos inclusos</span><span class="qo">Sim · Não</span></span></li><li class="q"><span class="qn">K10</span><span class="qb"><span class="qt">Reajuste</span><span class="qo">Índice e periodicidade</span></span></li><li class="q"><span class="qn">K11</span><span class="qb"><span class="qt">Prazo de pagamento</span><span class="qo">Dias</span></span></li><li class="q"><span class="qn">K12</span><span class="qb"><span class="qt">Responde cotações na planilha de preço padrão</span><span class="qo">Sim · Não</span></span></li></ul></div>
   </div>
 </article></div>
-  </section>
+          </section>
 
-  <section aria-labelledby="validar-form">
-    <div class="section-head">
-      <h2 id="validar-form">Pontos para validar nos formulários</h2>
-      <p>Basta responder citando o número da pergunta.</p>
+          <section class="sec" aria-labelledby="h-val2">
+            <div class="sec-head">
+              <span class="eyebrow">Para validar</span>
+              <h2 id="h-val2">Pontos dos formulários</h2>
+              <p>Basta responder citando o número da pergunta.</p>
+            </div>
+            <ul class="checks"><li><span class="check-ref">A1</span><b>Lista de segmentos</b><span class="check-q">Cobre os clientes que a Raz traz? Falta ou sobra algum?</span></li><li><span class="check-ref">74 perguntas</span><b>Tamanho do formulário do cliente</b><span class="check-q">Cabe numa conversa, ou dividimos em uma parte essencial (o que corta) e uma de detalhe (o que vira custo)?</span></li><li><span class="check-ref">A10, D3, E5, K4</span><b>Valores opcionais</b><span class="check-q">Valor do produto, do estoque, do pedido e custo atual ficam opcionais. Concorda?</span></li><li><span class="check-ref">J2</span><b>Prioridades do cliente</b><span class="check-q">Custo, prazo, qualidade e flexibilidade no pico são as escolhas certas para os clientes da Raz?</span></li></ul>
+          </section>
+        </div>
+      </div>
     </div>
-    <ul class="checks">
-      <li><b>A1: lista de segmentos</b><span>Cobre os clientes que a Raz traz? Falta ou sobra algum?</span></li>
-      <li><b>Tamanho do formulário do cliente</b><span>Cabe numa conversa, ou dividimos em uma parte essencial (o que corta) e uma de detalhe (o que vira custo)?</span></li>
-      <li><b>A10, D3, E5 e K4: valores opcionais</b><span>Valor do produto, do estoque, do pedido e custo atual ficam opcionais. Concorda?</span></li>
-      <li><b>J2: prioridades do cliente</b><span>Custo, prazo, qualidade e flexibilidade no pico são as escolhas certas para os clientes da Raz?</span></li>
-    </ul>
-  </section>
+    <footer class="foot">Versão para validação, 7 de novembro de 2026.</footer>
   </div>
-
-  <footer>Versão para validação, 7 de novembro de 2026.</footer>
-</div>
+</main>
 <script>
 (function () {
   var names = ["fluxo", "formularios"];
   function show(name) {
     if (names.indexOf(name) < 0) name = "fluxo";
     names.forEach(function (n) {
-      var tab = document.getElementById("tab-" + n);
-      var panel = document.getElementById("panel-" + n);
       var on = n === name;
+      var tab = document.getElementById("tab-" + n);
       tab.setAttribute("aria-selected", on ? "true" : "false");
       tab.tabIndex = on ? 0 : -1;
-      panel.hidden = !on;
+      document.getElementById("panel-" + n).hidden = !on;
     });
   }
   function fromHash() { show((location.hash || "").replace("#", "")); }
   names.forEach(function (n) {
     document.getElementById("tab-" + n).addEventListener("click", function () {
       if (location.hash !== "#" + n) { location.hash = n; } else { show(n); }
-      window.scrollTo({ top: 0 });
+      var top = document.querySelector(".tabbar").offsetTop;
+      if (window.scrollY > top) window.scrollTo({ top: top });
     });
   });
-  document.querySelector(".tabs").addEventListener("keydown", function (e) {
+  document.querySelector(".tabbar").addEventListener("keydown", function (e) {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     var cur = names.indexOf(document.querySelector('.tab[aria-selected="true"]').id.replace("tab-", ""));
     var next = names[(cur + (e.key === "ArrowRight" ? 1 : names.length - 1)) % names.length];
     location.hash = next;
     document.getElementById("tab-" + next).focus();
   });
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll(".jump").forEach(function (b) {
     b.addEventListener("click", function () {
       var el = document.getElementById(b.getAttribute("data-target"));
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     });
   });
   window.addEventListener("hashchange", fromHash);
