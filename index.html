@@ -21,6 +21,10 @@
   --accent-soft: #e7e6fb;
   --decide: #a85d12;
   --decide-soft: #fbefe0;
+  --crit: #b4232a;
+  --crit-soft: #fbe9e9;
+  --teal: #0f766e;
+  --teal-soft: #e2f4f1;
   --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
@@ -28,14 +32,14 @@
   :root:not([data-theme="light"]) {
     --paper: #12161d; --surface: #1a2029; --band: #161b23; --head: #222a35;
     --ink: #e8ecf2; --muted: #a3acb9; --line: #3b4453;
-    --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18;
+    --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18; --crit: #ff8a8f; --crit-soft: #3b1e22; --teal: #5fd4c4; --teal-soft: #15332f;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #12161d; --surface: #1a2029; --band: #161b23; --head: #222a35;
   --ink: #e8ecf2; --muted: #a3acb9; --line: #3b4453;
-  --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18;
+  --accent: #9da3ff; --accent-soft: #272b55; --decide: #f0b360; --decide-soft: #392b18; --crit: #ff8a8f; --crit-soft: #3b1e22; --teal: #5fd4c4; --teal-soft: #15332f;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -55,7 +59,7 @@ body {
   display: grid;
   gap: 48px;
 }
-header { display: grid; gap: 16px; max-width: 70ch; }
+.wrap > header { display: grid; gap: 16px; max-width: 70ch; }
 .eyebrow {
   font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
 }
@@ -131,30 +135,86 @@ section { display: grid; gap: 20px; }
 .checks li b { font-size: 16px; }
 .checks li span { color: var(--muted); font-size: 15px; }
 footer { color: var(--muted); font-size: 14px; }
-</style>
 
+[hidden] { display: none !important; }
+/* Abas */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tab {
+  appearance: none; background: none; border: 0; border-bottom: 3px solid transparent;
+  font: inherit; font-weight: 700; font-size: 16px; color: var(--muted);
+  padding: 10px 16px 12px; cursor: pointer; white-space: nowrap; margin-bottom: -1px;
+}
+.tab span { font-weight: 600; font-variant-numeric: tabular-nums; margin-right: 6px; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab:focus-visible, .jump:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.panel { display: grid; gap: 48px; }
+
+/* Nota */
+.nota { margin: 0; padding-left: 1.4em; display: grid; gap: 10px; max-width: 75ch; }
+.nota li::marker { color: var(--muted); font-weight: 700; }
+
+/* Navegação por bloco */
+.jumps { display: flex; flex-wrap: wrap; gap: 8px; }
+.jump {
+  appearance: none; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 12px; cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline;
+}
+.jump span { font-weight: 400; color: var(--muted); }
+.jump:hover { border-color: var(--accent); }
+
+/* Blocos */
+.blocks { display: grid; gap: 20px; }
+.block { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; scroll-margin-top: 16px; }
+.block-head { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-bottom: 1px solid var(--line); background: var(--band); }
+.block-letter {
+  flex: none; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--accent);
+  background: var(--accent-soft); border: 1px solid var(--accent);
+}
+.block-head h3 { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.block-head p { color: var(--muted); font-size: 15px; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.side { padding: 16px 20px 20px; min-width: 0; display: grid; gap: 10px; align-content: start; }
+.side + .side { border-left: 1px solid var(--line); }
+.side h4 { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.side h4 small { font-size: 13px; font-weight: 600; color: var(--muted); margin-left: 4px; letter-spacing: 0; }
+.qs { list-style: none; margin: 0; padding: 0; display: grid; }
+.q { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) auto; gap: 2px 10px; padding: 10px 0; border-top: 1px solid var(--line); align-items: start; }
+.q:first-child { border-top: 0; padding-top: 2px; }
+.qn { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; padding-top: 1px; }
+.qb { display: grid; gap: 2px; min-width: 0; }
+.qt { font-size: 15px; line-height: 1.4; }
+.qo { font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+.chips { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.chip { font-style: normal; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
+.c-corta { color: var(--crit); background: var(--crit-soft); border-color: var(--crit); }
+.c-pontua { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
+.c-custo { color: var(--teal); background: var(--teal-soft); border-color: var(--teal); }
+.c-neutro { color: var(--muted); background: var(--band); border-color: var(--line); }
+@media (max-width: 760px) {
+  .pair { grid-template-columns: 1fr; }
+  .side + .side { border-left: 0; border-top: 1px solid var(--line); }
+  .q { grid-template-columns: 2.4rem minmax(0, 1fr); }
+  .chips { grid-column: 2; flex-direction: row; align-items: center; justify-content: flex-start; }
+}
+</style>
 <style>body{margin:0}</style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <div class="eyebrow">Projeto Raz · Logística</div>
-    <h1>Fluxo do levantamento à operação</h1>
-    <p class="lead">Como a Raz e o Consolida levam cada cliente do primeiro levantamento até o operador logístico certo, com o custo simulado e o fluxo operacional definidos antes da assinatura.</p>
+    <h1>Fluxo e formulários de aderência</h1>
+    <p class="lead">Como a Raz e o Consolida levam cada cliente do primeiro levantamento até o operador logístico certo, e o que perguntamos ao cliente e ao operador para fazer essa escolha.</p>
   </header>
 
-  <section aria-labelledby="regras">
-    <div class="section-head">
-      <h2 id="regras">Como os dois formulários se cruzam</h2>
-      <p>O formulário do cliente diz o que a operação precisa. O do operador diz o que ele atende. Os dois usam os mesmos blocos e as mesmas opções, e cada resposta tem um de três papéis.</p>
-    </div>
-    <div class="rules">
-      <div class="rule"><b>Corta</b><span>Tira da lista o operador que não atende. Exemplo: produto alimentício e operador sem licença sanitária.</span></div>
-      <div class="rule"><b>Pontua</b><span>Soma na nota de aderência, com o peso das prioridades do cliente. Exemplo: horário de corte.</span></div>
-      <div class="rule"><b>Custo</b><span>Não escolhe o operador. Vira premissa da cotação. Exemplo: pedidos por mês.</span></div>
-    </div>
-  </section>
+  <div class="tabs" role="tablist" aria-label="Conteúdo">
+    <button type="button" class="tab" role="tab" id="tab-fluxo" aria-controls="panel-fluxo" aria-selected="true"><span>1</span>Fluxo</button>
+    <button type="button" class="tab" role="tab" id="tab-formularios" aria-controls="panel-formularios" aria-selected="false" tabindex="-1"><span>2</span>Formulários</button>
+  </div>
 
+  <div class="panel" id="panel-fluxo" role="tabpanel" aria-labelledby="tab-fluxo">
   <section aria-labelledby="fluxo">
     <div class="section-head">
       <h2 id="fluxo">Fluxo completo</h2>
@@ -388,8 +448,167 @@ footer { color: var(--muted); font-size: 14px; }
       <li><b>Etapas 6 a 10: cliente oculto</b><span>O nome do cliente fica com a Raz e o Consolida até a contratação?</span></li>
     </ul>
   </section>
+  </div>
+
+  <div class="panel" id="panel-formularios" role="tabpanel" aria-labelledby="tab-formularios" hidden>
+  <section aria-labelledby="regras">
+    <div class="section-head">
+      <h2 id="regras">Como os dois formulários se cruzam</h2>
+      <p>O formulário do cliente diz o que a operação precisa. O do operador diz o que ele atende. Os dois usam os mesmos blocos e as mesmas opções, e cada resposta tem um de três papéis.</p>
+    </div>
+    <div class="rules">
+      <div class="rule"><b>Corta</b><span>Tira da lista o operador que não atende. Exemplo: produto alimentício e operador sem licença sanitária.</span></div>
+      <div class="rule"><b>Pontua</b><span>Soma na nota de aderência, com o peso das prioridades do cliente. Exemplo: horário de corte.</span></div>
+      <div class="rule"><b>Custo</b><span>Não escolhe o operador. Vira premissa da cotação. Exemplo: pedidos por mês.</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="nota">
+    <div class="section-head">
+      <h2 id="nota">Como sai a nota de aderência</h2>
+      <p>O cruzamento roda em três passos, sempre com as respostas dos dois formulários.</p>
+    </div>
+    <ol class="nota">
+      <li><b>Corte.</b> Basta uma resposta com papel Corta sem atendimento para o operador sair da lista. O motivo fica registrado.</li>
+      <li><b>Pontos.</b> Cada resposta com papel Pontua vale 2 quando o operador atende, 1 quando atende com custo extra ou aviso, e 0 quando não atende ou não informou. O que o operador não informa conta como não atende.</li>
+      <li><b>Peso e nota.</b> A ordem de prioridade do cliente (J2) multiplica os critérios ligados a ela. A nota é a soma dividida pelo máximo possível: verde a partir de 80%, amarelo de 60% a 79%, vermelho abaixo de 60%. Custo fica fora da nota e decide na simulação.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="blocos">
+    <div class="section-head">
+      <h2 id="blocos">Os dois formulários, bloco por bloco</h2>
+      <p>À esquerda, o que perguntamos ao cliente (74 perguntas). À direita, o que o operador declara (93 perguntas). A etiqueta mostra o papel de cada resposta do cliente no cruzamento.</p>
+    </div>
+    <nav class="jumps" aria-label="Ir para o bloco"><button type="button" class="jump" data-target="bloco-0">0<span>Identificação</span></button><button type="button" class="jump" data-target="bloco-A">A<span>Produto e segmento</span></button><button type="button" class="jump" data-target="bloco-B">B<span>Licenças e exigências legais</span></button><button type="button" class="jump" data-target="bloco-C">C<span>Origem e recebimento</span></button><button type="button" class="jump" data-target="bloco-D">D<span>Armazenagem e estoque</span></button><button type="button" class="jump" data-target="bloco-E">E<span>Pedidos, separação e embalagem</span></button><button type="button" class="jump" data-target="bloco-F">F<span>Volume e picos</span></button><button type="button" class="jump" data-target="bloco-G">G<span>Transporte e distribuição</span></button><button type="button" class="jump" data-target="bloco-H">H<span>Devolução</span></button><button type="button" class="jump" data-target="bloco-I">I<span>Sistemas e integração</span></button><button type="button" class="jump" data-target="bloco-J">J<span>Nível de serviço e responsabilidade</span></button><button type="button" class="jump" data-target="bloco-K">K<span>Condições comerciais e contrato</span></button></nav>
+    <div class="blocks"><article class="block" id="bloco-0">
+  <header class="block-head"><span class="block-letter">0</span><div><h3>Identificação</h3><p>Quem é quem. Do lado do cliente, fica só com a Raz e o Consolida.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>4</small></h4><ul class="qs"><li class="q"><span class="qn">0.1</span><span class="qb"><span class="qt">Empresa, CNPJ e contato</span><span class="qo">Texto</span></span><span class="chips"><i class="chip c-neutro">Não cruza</i></span></li><li class="q"><span class="qn">0.2</span><span class="qb"><span class="qt">Quem decide a logística</span><span class="qo">Nome e cargo</span></span><span class="chips"><i class="chip c-neutro">Não cruza</i></span></li><li class="q"><span class="qn">0.3</span><span class="qb"><span class="qt">Como a logística funciona hoje</span><span class="qo">Própria · Terceirizada · Ainda não vende</span></span><span class="chips"><i class="chip c-neutro">Não cruza</i></span></li><li class="q"><span class="qn">0.4</span><span class="qb"><span class="qt">O que precisa contratar</span><span class="qo">Armazenagem · fulfillment · transporte · last mile · coleta na origem</span></span><span class="chips"><i class="chip c-neutro">Define os blocos</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>6</small></h4><ul class="qs"><li class="q"><span class="qn">0.1</span><span class="qb"><span class="qt">Razão social, nome fantasia e CNPJ</span><span class="qo">Texto</span></span></li><li class="q"><span class="qn">0.2</span><span class="qb"><span class="qt">Há quanto tempo opera</span><span class="qo">Menos de 2 anos · 2 a 5 · 5 a 10 · Mais de 10</span></span></li><li class="q"><span class="qn">0.3</span><span class="qb"><span class="qt">Contato comercial e contato operacional</span><span class="qo">Nome, cargo, e-mail e telefone</span></span></li><li class="q"><span class="qn">0.4</span><span class="qb"><span class="qt">Serviços que oferece</span><span class="qo">Armazenagem B2B · fulfillment e-commerce · cross-docking · transporte fracionado · lotação · dedicado · coleta · last mile</span></span></li><li class="q"><span class="qn">0.5</span><span class="qb"><span class="qt">Até 3 clientes para referência</span><span class="qo">Segmento e contato</span></span></li><li class="q"><span class="qn">0.6</span><span class="qb"><span class="qt">Aceita visita técnica antes do contrato</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-A">
+  <header class="block-head"><span class="block-letter">A</span><div><h3>Produto e segmento</h3><p>O que é o produto e o que o operador aceita guardar.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>13</small></h4><ul class="qs"><li class="q"><span class="qn">A1</span><span class="qb"><span class="qt">Segmento do produto</span><span class="qo">Mesma lista do operador</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A2</span><span class="qb"><span class="qt">Descrição do produto, sem marca</span><span class="qo">Texto curto, é o que o operador lê</span></span><span class="chips"><i class="chip c-neutro">Não cruza</i></span></li><li class="q"><span class="qn">A3</span><span class="qb"><span class="qt">Temperatura de conservação</span><span class="qo">Mesma lista do operador</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A4</span><span class="qb"><span class="qt">Sensível a calor ou umidade, mesmo em temperatura ambiente</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A5</span><span class="qb"><span class="qt">É frágil (vidro, cerâmica)</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A6</span><span class="qb"><span class="qt">É produto perigoso</span><span class="qo">Não · Sim, classe ONU e FISPQ anexa</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A7</span><span class="qb"><span class="qt">Tem validade? Prazo de fábrica</span><span class="qo">Não · Sim, em meses</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A8</span><span class="qb"><span class="qt">Controla lote ou número de série</span><span class="qo">Lote · Série · Nenhum</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A9</span><span class="qb"><span class="qt">Tem cheiro forte ou absorve cheiro</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A10</span><span class="qb"><span class="qt">Valor médio por unidade</span><span class="qo">R$, opcional</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">A11</span><span class="qb"><span class="qt">Peso e medidas da unidade, da caixa e do palete, por SKU</span><span class="qo">Planilha anexa</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">A12</span><span class="qb"><span class="qt">Unidades por caixa, caixas por palete e empilhamento máximo</span><span class="qo">Números</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">A13</span><span class="qb"><span class="qt">Tem peça acima de 30 kg ou com mais de 1 m em um lado</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>8</small></h4><ul class="qs"><li class="q"><span class="qn">A1</span><span class="qb"><span class="qt">Segmentos que atende</span><span class="qo">Alimentos secos · refrigerados · congelados · bebidas · suplementos · cosméticos e higiene · saneantes · medicamentos e saúde · pet · químicos · agro · autopeças · eletrônicos · moda e calçados · casa e decoração · móveis e volumosos · industrial</span></span></li><li class="q"><span class="qn">A2</span><span class="qb"><span class="qt">Segmentos que não aceita</span><span class="qo">Mesma lista da A1</span></span></li><li class="q"><span class="qn">A3</span><span class="qb"><span class="qt">Temperaturas que mantém</span><span class="qo">Ambiente · controlado (15 a 25 °C) · refrigerado (2 a 8 °C) · congelado (abaixo de -18 °C)</span></span></li><li class="q"><span class="qn">A4</span><span class="qb"><span class="qt">Aceita produto frágil</span><span class="qo">Sim · Sim, com proteção cobrada · Não</span></span></li><li class="q"><span class="qn">A5</span><span class="qb"><span class="qt">Aceita produto perigoso</span><span class="qo">Não · Sim, classes</span></span></li><li class="q"><span class="qn">A6</span><span class="qb"><span class="qt">Aceita produto de alto valor</span><span class="qo">Com área restrita · Sem área restrita · Não</span></span></li><li class="q"><span class="qn">A7</span><span class="qb"><span class="qt">Aceita volumoso ou fora de padrão</span><span class="qo">Sim · Não</span></span></li><li class="q"><span class="qn">A8</span><span class="qb"><span class="qt">Separa alimento de químico e de cheiro forte</span><span class="qo">Área segregada · Mesma área · Não armazena</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-B">
+  <header class="block-head"><span class="block-letter">B</span><div><h3>Licenças e exigências legais</h3><p>O que a lei e o canal exigem, e o que o operador tem vigente.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>5</small></h4><ul class="qs"><li class="q"><span class="qn">B1</span><span class="qb"><span class="qt">Registro ou notificação na ANVISA, e em qual categoria</span><span class="qo">Não · Alimento · Suplemento · Cosmético · Saneante · Medicamento · Produto para saúde</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">B2</span><span class="qb"><span class="qt">Exige registro no MAPA</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">B3</span><span class="qb"><span class="qt">É produto controlado (Polícia Federal, Exército)</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">B4</span><span class="qb"><span class="qt">O canal ou um cliente exige certificação do armazém</span><span class="qo">Não · Sim, qual</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">B5</span><span class="qb"><span class="qt">Tem seguro próprio do estoque e da carga</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>10</small></h4><ul class="qs"><li class="q"><span class="qn">B1</span><span class="qb"><span class="qt">AVCB (Corpo de Bombeiros)</span><span class="qo">Validade e anexo</span></span></li><li class="q"><span class="qn">B2</span><span class="qb"><span class="qt">Alvará de funcionamento</span><span class="qo">Validade e anexo</span></span></li><li class="q"><span class="qn">B3</span><span class="qb"><span class="qt">Licença sanitária</span><span class="qo">Validade e anexo</span></span></li><li class="q"><span class="qn">B4</span><span class="qb"><span class="qt">Autorização da ANVISA (AFE) para armazenar</span><span class="qo">Cosméticos · saneantes · medicamentos · produtos para saúde</span></span></li><li class="q"><span class="qn">B5</span><span class="qb"><span class="qt">Registro ou cadastro no MAPA</span><span class="qo">Anexo</span></span></li><li class="q"><span class="qn">B6</span><span class="qb"><span class="qt">Licença ambiental para químicos e perigosos</span><span class="qo">Validade e anexo</span></span></li><li class="q"><span class="qn">B7</span><span class="qb"><span class="qt">Licença para produto controlado</span><span class="qo">Anexo</span></span></li><li class="q"><span class="qn">B8</span><span class="qb"><span class="qt">RNTRC na ANTT, para quem transporta</span><span class="qo">Número</span></span></li><li class="q"><span class="qn">B9</span><span class="qb"><span class="qt">Certificações de qualidade</span><span class="qo">ISO 9001 · outra · nenhuma</span></span></li><li class="q"><span class="qn">B10</span><span class="qb"><span class="qt">Seguro do estoque armazenado</span><span class="qo">Limite por evento em R$ · Fica com o cliente</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-C">
+  <header class="block-head"><span class="block-letter">C</span><div><h3>Origem e recebimento</h3><p>De onde vem a carga e como o armazém recebe.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>8</small></h4><ul class="qs"><li class="q"><span class="qn">C1</span><span class="qb"><span class="qt">Onde prefere o armazém</span><span class="qo">Cidade e UF · Perto da fábrica · Perto de quem compra · Sem preferência</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">C2</span><span class="qb"><span class="qt">De onde vem o produto</span><span class="qo">Fábrica própria · Fornecedor · Importação; cidade e UF</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">C3</span><span class="qb"><span class="qt">Como o produto chega</span><span class="qo">Palete fechado · Caixa batida · Contêiner</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">C4</span><span class="qb"><span class="qt">Quem leva o produto até o armazém</span><span class="qo">O cliente · O fornecedor · Precisa de coleta</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">C5</span><span class="qb"><span class="qt">Frequência de abastecimento</span><span class="qo">Semanal · Quinzenal · Mensal · Por lote de produção</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">C6</span><span class="qb"><span class="qt">Volume por abastecimento</span><span class="qo">Paletes ou caixas</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">C7</span><span class="qb"><span class="qt">Precisa etiquetar na entrada</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">C8</span><span class="qb"><span class="qt">Prazo para o estoque ficar disponível depois da chegada</span><span class="qo">Mesmo dia · 24 h · 48 h · Sem urgência</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>7</small></h4><ul class="qs"><li class="q"><span class="qn">C1</span><span class="qb"><span class="qt">Unidades</span><span class="qo">Cidade e UF, área, posições-palete livres e docas, uma linha por unidade</span></span></li><li class="q"><span class="qn">C2</span><span class="qb"><span class="qt">Como recebe</span><span class="qo">Palete fechado · caixa batida · desova de contêiner</span></span></li><li class="q"><span class="qn">C3</span><span class="qb"><span class="qt">Recebe com agendamento? Em que horários</span><span class="qo">Horário · Não precisa agendar</span></span></li><li class="q"><span class="qn">C4</span><span class="qb"><span class="qt">Coleta na origem</span><span class="qo">Frota própria · Terceirizada · Não</span></span></li><li class="q"><span class="qn">C5</span><span class="qb"><span class="qt">O que confere no recebimento</span><span class="qo">Quantidade · lote · validade · número de série · avaria · peso</span></span></li><li class="q"><span class="qn">C6</span><span class="qb"><span class="qt">Prazo para disponibilizar o estoque</span><span class="qo">Mesmo dia · 24 h · 48 h · Mais de 48 h</span></span></li><li class="q"><span class="qn">C7</span><span class="qb"><span class="qt">Etiqueta na entrada</span><span class="qo">Incluso · Cobrado à parte · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-D">
+  <header class="block-head"><span class="block-letter">D</span><div><h3>Armazenagem e estoque</h3><p>Quanto fica guardado e como o estoque é controlado.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>5</small></h4><ul class="qs"><li class="q"><span class="qn">D1</span><span class="qb"><span class="qt">Quantos SKUs ativos</span><span class="qo">Número</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">D2</span><span class="qb"><span class="qt">Estoque médio</span><span class="qo">Paletes ou unidades</span></span><span class="chips"><i class="chip c-corta">Corta</i><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">D3</span><span class="qb"><span class="qt">Valor médio em estoque</span><span class="qo">R$, opcional</span></span><span class="chips"><i class="chip c-corta">Corta</i><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">D4</span><span class="qb"><span class="qt">Quantos dias de venda quer manter em estoque</span><span class="qo">Dias</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">D5</span><span class="qb"><span class="qt">Frequência de inventário esperada</span><span class="qo">Mensal · Trimestral · Rotativo · Não precisa</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>6</small></h4><ul class="qs"><li class="q"><span class="qn">D1</span><span class="qb"><span class="qt">Controle de estoque do sistema</span><span class="qo">FIFO · FEFO (por validade) · por lote · por número de série</span></span></li><li class="q"><span class="qn">D2</span><span class="qb"><span class="qt">Bloqueia produto vencido ou perto do vencimento</span><span class="qo">Automático · Manual · Não</span></span></li><li class="q"><span class="qn">D3</span><span class="qb"><span class="qt">Inventário</span><span class="qo">Rotativo · Geral, com frequência</span></span></li><li class="q"><span class="qn">D4</span><span class="qb"><span class="qt">Acuracidade de estoque garantida em contrato</span><span class="qo">Percentual · Não garante</span></span></li><li class="q"><span class="qn">D5</span><span class="qb"><span class="qt">Estrutura de armazenagem</span><span class="qo">Porta-palete · prateleira para picking · blocado · mezanino</span></span></li><li class="q"><span class="qn">D6</span><span class="qb"><span class="qt">Área de quarentena</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-E">
+  <header class="block-head"><span class="block-letter">E</span><div><h3>Pedidos, separação e embalagem</h3><p>Como o cliente vende e como o operador separa e expede.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>13</small></h4><ul class="qs"><li class="q"><span class="qn">E1</span><span class="qb"><span class="qt">Canais de venda</span><span class="qo">TikTok Shop · Mercado Livre · Shopee · Amazon · loja própria · varejo · atacado · atacarejo</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">E2</span><span class="qb"><span class="qt">Perfil do pedido</span><span class="qo">Mesma lista do operador</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">E3</span><span class="qb"><span class="qt">Pedidos por mês e por dia, em média</span><span class="qo">Números</span></span><span class="chips"><i class="chip c-corta">Corta</i><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">E4</span><span class="qb"><span class="qt">Itens por pedido</span><span class="qo">Parte dos pedidos com 1, com 2 e com 3 ou mais</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">E5</span><span class="qb"><span class="qt">Valor médio do pedido</span><span class="qo">R$, opcional</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">E6</span><span class="qb"><span class="qt">Vende kits? Quantos tipos</span><span class="qo">Não · Sim, quantos</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">E7</span><span class="qb"><span class="qt">Embalagem</span><span class="qo">Padrão do operador · Da marca, fornecida pelo cliente · De presente</span></span><span class="chips"><i class="chip c-pontua">Pontua</i><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">E8</span><span class="qb"><span class="qt">Insere brinde, folheto ou amostra no pedido</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">E9</span><span class="qb"><span class="qt">Envia amostras para creators ou parceiros? Por onde</span><span class="qo">Pela plataforma, como pedido normal · Por fora · Não envia</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">E10</span><span class="qb"><span class="qt">Horário de corte desejado</span><span class="qo">Hora</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">E11</span><span class="qb"><span class="qt">Prazo de expedição esperado</span><span class="qo">Mesmo dia · 1 dia útil · 2 dias úteis</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">E12</span><span class="qb"><span class="qt">Precisa expedir no fim de semana</span><span class="qo">Sábado · Domingo · Não</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">E13</span><span class="qb"><span class="qt">Quem emite a nota fiscal de saída</span><span class="qo">Cliente, pelo ERP · Operador</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>9</small></h4><ul class="qs"><li class="q"><span class="qn">E1</span><span class="qb"><span class="qt">Perfis de pedido que atende</span><span class="qo">Palete fechado · caixa fechada · fracionado B2B · e-commerce B2C</span></span></li><li class="q"><span class="qn">E2</span><span class="qb"><span class="qt">Serviços de valor agregado</span><span class="qo">Montagem de kit · embalagem de presente · brinde ou folheto · etiquetagem · reembalagem · personalização</span></span></li><li class="q"><span class="qn">E3</span><span class="qb"><span class="qt">Material de embalagem</span><span class="qo">Incluso no preço · Cobrado à parte · Do cliente</span></span></li><li class="q"><span class="qn">E4</span><span class="qb"><span class="qt">Embalagem térmica</span><span class="qo">Sim · Sob cotação · Não</span></span></li><li class="q"><span class="qn">E5</span><span class="qb"><span class="qt">Proteção para frágil</span><span class="qo">Com especificação escrita · Sem especificação · Não</span></span></li><li class="q"><span class="qn">E6</span><span class="qb"><span class="qt">Horário de corte</span><span class="qo">Hora</span></span></li><li class="q"><span class="qn">E7</span><span class="qb"><span class="qt">Prazo de preparação depois do corte</span><span class="qo">Mesmo dia · 1 dia útil · 2 dias úteis</span></span></li><li class="q"><span class="qn">E8</span><span class="qb"><span class="qt">Dias de operação</span><span class="qo">Segunda a sexta · sábado · domingo · feriados com aviso</span></span></li><li class="q"><span class="qn">E9</span><span class="qb"><span class="qt">Nota fiscal de saída</span><span class="qo">Operador emite · Cliente emite · Integração automática</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-F">
+  <header class="block-head"><span class="block-letter">F</span><div><h3>Volume e picos</h3><p>O tamanho da operação no mês comum e no dia de pico.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>5</small></h4><ul class="qs"><li class="q"><span class="qn">F1</span><span class="qb"><span class="qt">Meses de maior venda</span><span class="qo">Janeiro a dezembro</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">F2</span><span class="qb"><span class="qt">Maior volume esperado em um dia</span><span class="qo">Pedidos</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">F3</span><span class="qb"><span class="qt">Com quantos dias avisa uma campanha ou live</span><span class="qo">Dias</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">F4</span><span class="qb"><span class="qt">Pedidos por mês no mês 1, no mês 6 e no mês 12</span><span class="qo">Números ou plano de negócio anexo</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">F5</span><span class="qb"><span class="qt">Operação contínua ou só campanha? Por quanto tempo</span><span class="qo">Contínua · Campanha de alguns meses</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>6</small></h4><ul class="qs"><li class="q"><span class="qn">F1</span><span class="qb"><span class="qt">Capacidade média de pedidos por dia, por perfil</span><span class="qo">Número</span></span></li><li class="q"><span class="qn">F2</span><span class="qb"><span class="qt">Capacidade em dia de pico</span><span class="qo">Pedidos em 24 h</span></span></li><li class="q"><span class="qn">F3</span><span class="qb"><span class="qt">Aviso que precisa para o pico</span><span class="qo">Dias</span></span></li><li class="q"><span class="qn">F4</span><span class="qb"><span class="qt">Sobretaxa no pico</span><span class="qo">Não · Sim, percentual</span></span></li><li class="q"><span class="qn">F5</span><span class="qb"><span class="qt">Volume mínimo para aceitar um cliente</span><span class="qo">Não tem · Pedidos por mês · Paletes</span></span></li><li class="q"><span class="qn">F6</span><span class="qb"><span class="qt">Aceita operação sazonal (campanha de 2 a 3 meses)</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-G">
+  <header class="block-head"><span class="block-letter">G</span><div><h3>Transporte e distribuição</h3><p>Só aparece quando o cliente precisa contratar transporte e o operador oferece.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>7</small></h4><ul class="qs"><li class="q"><span class="qn">G1</span><span class="qb"><span class="qt">Quem faz a entrega</span><span class="qo">A plataforma coleta no armazém · Transportadora do cliente · Precisa contratar</span></span><span class="chips"><i class="chip c-neutro">Define o bloco</i></span></li><li class="q"><span class="qn">G2</span><span class="qb"><span class="qt">Para onde vai: UFs e a parte dos pedidos de cada região</span><span class="qo">Lista por UF</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">G3</span><span class="qb"><span class="qt">Tipo de destinatário</span><span class="qo">Consumidor final · loja · CD de varejo com agendamento · CD de marketplace</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">G4</span><span class="qb"><span class="qt">Prazo de entrega esperado por região</span><span class="qo">Dias por região</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">G5</span><span class="qb"><span class="qt">Restrição no destino</span><span class="qo">Horário · veículo pequeno · área de risco · nenhuma</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">G6</span><span class="qb"><span class="qt">Rastreamento e comprovante para o comprador</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">G7</span><span class="qb"><span class="qt">Peso e volume médios por pedido ou embarque</span><span class="qo">kg e m³</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>11</small></h4><ul class="qs"><li class="q"><span class="qn">G1</span><span class="qb"><span class="qt">Modalidades</span><span class="qo">Fracionado · lotação · dedicado · last mile · CD de marketplace</span></span></li><li class="q"><span class="qn">G2</span><span class="qb"><span class="qt">Abrangência por UF</span><span class="qo">Capital e interior · Só capital · Não atende</span></span></li><li class="q"><span class="qn">G3</span><span class="qb"><span class="qt">Prazo de entrega por região</span><span class="qo">Tabela anexa</span></span></li><li class="q"><span class="qn">G4</span><span class="qb"><span class="qt">Tipos de veículo</span><span class="qo">Utilitário · VUC · 3/4 · toco · truck · carreta · baú · sider · refrigerado</span></span></li><li class="q"><span class="qn">G5</span><span class="qb"><span class="qt">Frequência de saída por rota</span><span class="qo">Diária · Algumas vezes por semana</span></span></li><li class="q"><span class="qn">G6</span><span class="qb"><span class="qt">Agendamento em CD de varejo e atacarejo</span><span class="qo">Sim · Não</span></span></li><li class="q"><span class="qn">G7</span><span class="qb"><span class="qt">Marketplace e coleta da plataforma</span><span class="qo">Full Mercado Livre · Amazon · Shopee · coleta no armazém · não faz</span></span></li><li class="q"><span class="qn">G8</span><span class="qb"><span class="qt">Rastreamento e comprovante</span><span class="qo">Tempo real · Por status · Comprovante digital · Não tem</span></span></li><li class="q"><span class="qn">G9</span><span class="qb"><span class="qt">Seguro de transporte</span><span class="qo">RCTR-C · RC-DC · limite por veículo</span></span></li><li class="q"><span class="qn">G10</span><span class="qb"><span class="qt">Taxas adicionais que cobra</span><span class="qo">TDE · TRT · agendamento · reentrega · devolução · pedágio · GRIS · ad valorem · estadia, com a regra de cada uma</span></span></li><li class="q"><span class="qn">G11</span><span class="qb"><span class="qt">Carga perigosa (MOPP, kit de emergência)</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-H">
+  <header class="block-head"><span class="block-letter">H</span><div><h3>Devolução</h3><p>O que volta e o que o operador faz com isso.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>3</small></h4><ul class="qs"><li class="q"><span class="qn">H1</span><span class="qb"><span class="qt">Parte dos pedidos que costuma voltar</span><span class="qo">Percentual</span></span><span class="chips"><i class="chip c-custo">Custo</i></span></li><li class="q"><span class="qn">H2</span><span class="qb"><span class="qt">O que fazer com o que volta</span><span class="qo">Volta ao estoque · Descarte · Avaliar caso a caso · Devolver ao cliente</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">H3</span><span class="qb"><span class="qt">Precisa de coleta reversa</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>4</small></h4><ul class="qs"><li class="q"><span class="qn">H1</span><span class="qb"><span class="qt">Recebe devoluções</span><span class="qo">Sim · Não</span></span></li><li class="q"><span class="qn">H2</span><span class="qb"><span class="qt">O que faz com a devolução</span><span class="qo">Triagem · volta ao estoque · descarte com registro · devolve ao cliente</span></span></li><li class="q"><span class="qn">H3</span><span class="qb"><span class="qt">Prazo para tratar a devolução</span><span class="qo">Dias úteis</span></span></li><li class="q"><span class="qn">H4</span><span class="qb"><span class="qt">Coleta reversa no consumidor ou na loja</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-I">
+  <header class="block-head"><span class="block-letter">I</span><div><h3>Sistemas e integração</h3><p>Como os sistemas da loja, do cliente e do armazém conversam.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>3</small></h4><ul class="qs"><li class="q"><span class="qn">I1</span><span class="qb"><span class="qt">ERP que usa</span><span class="qo">Qual</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">I2</span><span class="qb"><span class="qt">Plataformas de loja e integrador</span><span class="qo">Mesma lista do operador</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">I3</span><span class="qb"><span class="qt">Como quer acompanhar o estoque</span><span class="qo">Painel online · Relatório diário · Relatório semanal</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>6</small></h4><ul class="qs"><li class="q"><span class="qn">I1</span><span class="qb"><span class="qt">Sistema de armazém (WMS)</span><span class="qo">Próprio · De mercado · Não tem</span></span></li><li class="q"><span class="qn">I2</span><span class="qb"><span class="qt">Integrações prontas</span><span class="qo">TikTok Shop · Mercado Livre · Shopee · Amazon · Shopify · VTEX · Nuvemshop · Bling · Tiny · SAP · TOTVS · Sankhya · integrador · API · EDI</span></span></li><li class="q"><span class="qn">I3</span><span class="qb"><span class="qt">Prazo para integrar um sistema novo</span><span class="qo">Dias</span></span></li><li class="q"><span class="qn">I4</span><span class="qb"><span class="qt">Como o cliente acompanha o estoque</span><span class="qo">Painel online · E-mail · PDF · Não tem</span></span></li><li class="q"><span class="qn">I5</span><span class="qb"><span class="qt">Frequência do relatório de estoque</span><span class="qo">Tempo real · Diário · Semanal</span></span></li><li class="q"><span class="qn">I6</span><span class="qb"><span class="qt">Envia os documentos fiscais de forma automática</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-J">
+  <header class="block-head"><span class="block-letter">J</span><div><h3>Nível de serviço e responsabilidade</h3><p>O que o cliente espera e o que o operador garante por escrito.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>4</small></h4><ul class="qs"><li class="q"><span class="qn">J1</span><span class="qb"><span class="qt">Indicadores que quer receber</span><span class="qo">Mesma lista do operador</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">J2</span><span class="qb"><span class="qt">Ordem do que pesa mais na escolha</span><span class="qo">Custo · Prazo · Qualidade · Flexibilidade no pico</span></span><span class="chips"><i class="chip c-neutro">Define os pesos</i></span></li><li class="q"><span class="qn">J3</span><span class="qb"><span class="qt">Ressarcimento esperado em avaria ou extravio</span><span class="qo">Pelo custo · Pelo valor de venda</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">J4</span><span class="qb"><span class="qt">Precisa de interlocutor dedicado</span><span class="qo">Sim · Não</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>8</small></h4><ul class="qs"><li class="q"><span class="qn">J1</span><span class="qb"><span class="qt">Pedidos no prazo garantidos em contrato</span><span class="qo">Percentual · Não garante</span></span></li><li class="q"><span class="qn">J2</span><span class="qb"><span class="qt">Responsabilidade por avaria de manuseio</span><span class="qo">Acima de um percentual · Toda avaria · Não responde</span></span></li><li class="q"><span class="qn">J3</span><span class="qb"><span class="qt">Ressarcimento de avaria e extravio</span><span class="qo">Pelo custo · Pelo valor de venda · Não ressarce; prazo em dias</span></span></li><li class="q"><span class="qn">J4</span><span class="qb"><span class="qt">Responde por avaria oculta</span><span class="qo">Sim · Não</span></span></li><li class="q"><span class="qn">J5</span><span class="qb"><span class="qt">Indicadores que envia</span><span class="qo">Pedidos no prazo · acuracidade · avaria · devolução · tempo de recebimento</span></span></li><li class="q"><span class="qn">J6</span><span class="qb"><span class="qt">Interlocutor dedicado por cliente</span><span class="qo">Sim · Central de atendimento</span></span></li><li class="q"><span class="qn">J7</span><span class="qb"><span class="qt">Tempo de resposta a uma ocorrência</span><span class="qo">Até 2 h · No mesmo dia · Até 24 h</span></span></li><li class="q"><span class="qn">J8</span><span class="qb"><span class="qt">Aceita desconto quando o serviço falha</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article><article class="block" id="bloco-K">
+  <header class="block-head"><span class="block-letter">K</span><div><h3>Condições comerciais e contrato</h3><p>Prazo, forma de cobrança e regras do contrato.</p></div></header>
+  <div class="pair">
+    <div class="side"><h4>Cliente informa <small>4</small></h4><ul class="qs"><li class="q"><span class="qn">K1</span><span class="qb"><span class="qt">Prazo de contrato que aceita</span><span class="qo">Sem fidelidade · 6 · 12 · 24 meses</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">K2</span><span class="qb"><span class="qt">Como prefere pagar</span><span class="qo">Preço fechado por pedido · Por item · Sem preferência</span></span><span class="chips"><i class="chip c-pontua">Pontua</i></span></li><li class="q"><span class="qn">K3</span><span class="qb"><span class="qt">Data em que precisa começar a operar</span><span class="qo">Data</span></span><span class="chips"><i class="chip c-corta">Corta</i></span></li><li class="q"><span class="qn">K4</span><span class="qb"><span class="qt">Custo logístico atual, se souber</span><span class="qo">R$, opcional</span></span><span class="chips"><i class="chip c-neutro">Comparação</i></span></li></ul></div>
+    <div class="side"><h4>Operador declara <small>12</small></h4><ul class="qs"><li class="q"><span class="qn">K1</span><span class="qb"><span class="qt">Modelo de cobrança</span><span class="qo">Por item · Preço fechado por pedido · Percentual sobre a nota · Mensalidade</span></span></li><li class="q"><span class="qn">K2</span><span class="qb"><span class="qt">Armazenagem cobrada por</span><span class="qo">Posição-palete · m² · m³ · unidade</span></span></li><li class="q"><span class="qn">K3</span><span class="qb"><span class="qt">Ad valorem sobre o estoque</span><span class="qo">Não · Sim, percentual</span></span></li><li class="q"><span class="qn">K4</span><span class="qb"><span class="qt">Mínimo mensal</span><span class="qo">Não tem · R$</span></span></li><li class="q"><span class="qn">K5</span><span class="qb"><span class="qt">Taxa de implantação</span><span class="qo">Não tem · R$</span></span></li><li class="q"><span class="qn">K6</span><span class="qb"><span class="qt">Prazo mínimo de contrato</span><span class="qo">Sem prazo · 6 · 12 · 24 meses</span></span></li><li class="q"><span class="qn">K7</span><span class="qb"><span class="qt">Multa de saída antecipada</span><span class="qo">Não tem · Valor</span></span></li><li class="q"><span class="qn">K8</span><span class="qb"><span class="qt">Prazo de implantação depois da assinatura</span><span class="qo">Dias</span></span></li><li class="q"><span class="qn">K9</span><span class="qb"><span class="qt">Preços com impostos inclusos</span><span class="qo">Sim · Não</span></span></li><li class="q"><span class="qn">K10</span><span class="qb"><span class="qt">Reajuste</span><span class="qo">Índice e periodicidade</span></span></li><li class="q"><span class="qn">K11</span><span class="qb"><span class="qt">Prazo de pagamento</span><span class="qo">Dias</span></span></li><li class="q"><span class="qn">K12</span><span class="qb"><span class="qt">Responde cotações na planilha de preço padrão</span><span class="qo">Sim · Não</span></span></li></ul></div>
+  </div>
+</article></div>
+  </section>
+
+  <section aria-labelledby="validar-form">
+    <div class="section-head">
+      <h2 id="validar-form">Pontos para validar nos formulários</h2>
+      <p>Basta responder citando o número da pergunta.</p>
+    </div>
+    <ul class="checks">
+      <li><b>A1: lista de segmentos</b><span>Cobre os clientes que a Raz traz? Falta ou sobra algum?</span></li>
+      <li><b>Tamanho do formulário do cliente</b><span>Cabe numa conversa, ou dividimos em uma parte essencial (o que corta) e uma de detalhe (o que vira custo)?</span></li>
+      <li><b>A10, D3, E5 e K4: valores opcionais</b><span>Valor do produto, do estoque, do pedido e custo atual ficam opcionais. Concorda?</span></li>
+      <li><b>J2: prioridades do cliente</b><span>Custo, prazo, qualidade e flexibilidade no pico são as escolhas certas para os clientes da Raz?</span></li>
+    </ul>
+  </section>
+  </div>
 
   <footer>Versão para validação, 7 de novembro de 2026.</footer>
 </div>
+<script>
+(function () {
+  var names = ["fluxo", "formularios"];
+  function show(name) {
+    if (names.indexOf(name) < 0) name = "fluxo";
+    names.forEach(function (n) {
+      var tab = document.getElementById("tab-" + n);
+      var panel = document.getElementById("panel-" + n);
+      var on = n === name;
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.tabIndex = on ? 0 : -1;
+      panel.hidden = !on;
+    });
+  }
+  function fromHash() { show((location.hash || "").replace("#", "")); }
+  names.forEach(function (n) {
+    document.getElementById("tab-" + n).addEventListener("click", function () {
+      if (location.hash !== "#" + n) { location.hash = n; } else { show(n); }
+      window.scrollTo({ top: 0 });
+    });
+  });
+  document.querySelector(".tabs").addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    var cur = names.indexOf(document.querySelector('.tab[aria-selected="true"]').id.replace("tab-", ""));
+    var next = names[(cur + (e.key === "ArrowRight" ? 1 : names.length - 1)) % names.length];
+    location.hash = next;
+    document.getElementById("tab-" + next).focus();
+  });
+  document.querySelectorAll(".jump").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var el = document.getElementById(b.getAttribute("data-target"));
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+})();
+</script>
 </body>
 </html>
